@@ -87,7 +87,8 @@ INSERT INTO tbl_rol (nombre_rol) VALUES
 
 -- Insertar usuarios (camareros) adaptados (sin id_usuario porque es AUTO_INCREMENT)
 INSERT INTO tbl_usuarios (nombre_user, nombre_real, ape_usuario, telefono_usuario, contrasena, rol_user, foto_usuario) VALUES
-    ('Jorge', 'Jorge', 'López', '123456789', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 2, NULL),
+
+    ('Jorge', 'Jorge', 'López', '123456789', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa',2, NULL),
     ('Olga', 'Olga', 'Gómez', '987654321', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1, NULL),
     ('Miguel', 'Miguel', 'Pérez', '456123789', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1, NULL),
     ('Ana', 'Ana', 'Martínez', '654987321', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 3, NULL),
@@ -160,3 +161,4 @@ INSERT INTO tbl_reservas_recursos (id_usuario, fecha_reserva, hora_inicio, hora_
 INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES
     (902, 9, 20, 'libre'), 
     (303, 3, 4, 'ocupada');
+
