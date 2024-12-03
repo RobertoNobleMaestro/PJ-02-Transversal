@@ -16,7 +16,7 @@ if (!isset($_SESSION['usuario'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/menu.css"> <!-- Archivo de estilos para el menú y la página -->
+    <link rel="stylesheet" href="./css/menu.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
@@ -25,40 +25,33 @@ if (!isset($_SESSION['usuario'])) {
 </head>
 
 <body>
-    <!-- Barra de navegación -->
     <div class="container">
         <nav class="navegacion">
-            <!-- Sección izquierda con el logo grande y el ícono adicional más pequeño -->
             <div class="navbar-left">
                 <a href="./menu.php"><img src="./img/logo.png" alt="Logo de la Marca" class="logo" style="width: 100%;"></a>
                 <a href="./registro.php"><img src="./img/lbook.png" alt="Ícono adicional" class="navbar-icon"></a>
             </div>
 
-            <!-- Título en el centro -->
             <div class="navbar-title">
                 <h3>Historial de ocupaciones</h3>
             </div>
 
-            <!-- Icono de logout a la derecha -->
             <div class="navbar-right" style="margin-right: 18px;">
                 <a href="./menu.php"><img src="./img/atras.png" alt="Logout" class="navbar-icon"></a>
             </div>
 
             <div class="navbar-right">
-                <a href="././php/salir.php"><img src="./img/logout.png" alt="Logout" class="navbar-icon"></a>
+                <a href="./php/salir.php"><img src="./img/logout.png" alt="Logout" class="navbar-icon"></a>
             </div>
         </nav>
     </div>
     <br>
-    <!-- Contenido principal -->
+
     <div id="historial-container" class="container">
-        <h2 id="titulo-historial" class="text-white">Historial de Ocupaciones</h2> <!--Título en color blanco -->
+        <h2 id="titulo-historial" class="text-white">Historial de Ocupaciones</h2>
 
-        <!-- Formulario de filtros -->
         <form method="GET" action="registro.php" class="mt-3">
-            <!-- Contenedor para los filtros y los botones -->
             <div class="d-flex flex-wrap align-items-center">
-
                 <!-- Filtros (Desplegables) -->
                 <div class="d-flex flex-wrap align-items-center me-3 mb-3">
                     <div class="me-3">
@@ -66,9 +59,10 @@ if (!isset($_SESSION['usuario'])) {
                         <select name="usuario" class="form-control form-control-sm" style="height: 40px; width: 200px;">
                             <option value="">Todos</option>
                             <?php
+                            // Consulta para usuarios
                             $query_usuarios = "SELECT id_usuario, nombre_user FROM tbl_usuarios";
-                            $result_usuarios = mysqli_query($conexion, $query_usuarios);
-                            while ($usuario = mysqli_fetch_assoc($result_usuarios)) {
+                            $stmt_usuarios = $conexion->query($query_usuarios);
+                            while ($usuario = $stmt_usuarios->fetch(PDO::FETCH_ASSOC)) {
                                 $selected = isset($_GET['usuario']) && $_GET['usuario'] == $usuario['id_usuario'] ? 'selected' : '';
                                 echo "<option value='{$usuario['id_usuario']}' $selected>{$usuario['nombre_user']}</option>";
                             }
@@ -81,9 +75,10 @@ if (!isset($_SESSION['usuario'])) {
                         <select name="sala" class="form-control form-control-sm" style="height: 40px; width: 200px;">
                             <option value="">Todas</option>
                             <?php
+                            // Consulta para salas
                             $query_salas = "SELECT id_sala, nombre_sala FROM tbl_salas";
-                            $result_salas = mysqli_query($conexion, $query_salas);
-                            while ($sala = mysqli_fetch_assoc($result_salas)) {
+                            $stmt_salas = $conexion->query($query_salas);
+                            while ($sala = $stmt_salas->fetch(PDO::FETCH_ASSOC)) {
                                 $selected = isset($_GET['sala']) && $_GET['sala'] == $sala['id_sala'] ? 'selected' : '';
                                 echo "<option value='{$sala['id_sala']}' $selected>{$sala['nombre_sala']}</option>";
                             }
@@ -96,9 +91,10 @@ if (!isset($_SESSION['usuario'])) {
                         <select name="mesa" class="form-control form-control-sm" style="height: 40px; width: 200px;">
                             <option value="">Todas</option>
                             <?php
+                            // Consulta para mesas
                             $query_mesas = "SELECT id_mesa, numero_mesa FROM tbl_mesas";
-                            $result_mesas = mysqli_query($conexion, $query_mesas);
-                            while ($mesa = mysqli_fetch_assoc($result_mesas)) {
+                            $stmt_mesas = $conexion->query($query_mesas);
+                            while ($mesa = $stmt_mesas->fetch(PDO::FETCH_ASSOC)) {
                                 $selected = isset($_GET['mesa']) && $_GET['mesa'] == $mesa['id_mesa'] ? 'selected' : '';
                                 echo "<option value='{$mesa['id_mesa']}' $selected>{$mesa['numero_mesa']}</option>";
                             }
@@ -115,26 +111,24 @@ if (!isset($_SESSION['usuario'])) {
                         </select>
                     </div>
 
-                    <!-- Botones -->
                     <div class="d-flex align-items-center mt-3">
-                        <button type="submit" class="btn btn-primary btn-sm me-2" style="height: 40px; width: 200px; margin-top: 10px; margin-right: 10px; margin-bottom: 2px;">Filtrar</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='registro.php'" style="height: 40px; width: 200px; margin-top: 10px; margin-left: 7px;">Borrar Filtros</button>
+                        <button type="submit" class="btn btn-primary btn-sm me-2" style="height: 40px; width: 200px; margin-top: 10px;">Filtrar</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='registro.php'" style="height: 40px; width: 200px; margin-left: 7px;">Borrar Filtros</button>
                     </div>
                 </div>
             </div>
         </form>
 
-
-        <!-- Variables para los filtros -->
         <?php
+        // Variables para los filtros
         $usuario_filter = isset($_GET['usuario']) && !empty($_GET['usuario']) ? $_GET['usuario'] : '';
         $sala_filter = isset($_GET['sala']) && !empty($_GET['sala']) ? $_GET['sala'] : '';
         $mesa_filter = isset($_GET['mesa']) && !empty($_GET['mesa']) ? $_GET['mesa'] : '';
         $estado_filter = isset($_GET['estado']) && !empty($_GET['estado']) ? $_GET['estado'] : '';
         ?>
 
-        <!-- Consulta SQL para obtener el historial de ocupaciones -->
         <?php
+        // Consulta SQL con filtros
         $query_historial = "SELECT u.nombre_user, s.nombre_sala, m.numero_mesa, m.estado, 
                                        o.fecha_inicio, o.fecha_fin, 
                                        TIMESTAMPDIFF(MINUTE, o.fecha_inicio, o.fecha_fin) AS duracion
@@ -145,23 +139,41 @@ if (!isset($_SESSION['usuario'])) {
 
         $filters = [];
         if ($usuario_filter) {
-            $filters[] = "u.id_usuario = '" . mysqli_real_escape_string($conexion, $usuario_filter) . "'";
+            $filters[] = "u.id_usuario = :usuario";
         }
         if ($sala_filter) {
-            $filters[] = "s.id_sala = '" . mysqli_real_escape_string($conexion, $sala_filter) . "'";
+            $filters[] = "s.id_sala = :sala";
         }
         if ($mesa_filter) {
-            $filters[] = "m.id_mesa = '" . mysqli_real_escape_string($conexion, $mesa_filter) . "'";
+            $filters[] = "m.id_mesa = :mesa";
         }
         if ($estado_filter) {
-            $filters[] = "m.estado = '" . mysqli_real_escape_string($conexion, $estado_filter) . "'";
+            $filters[] = "m.estado = :estado";
         }
 
         if (!empty($filters)) {
             $query_historial .= " WHERE " . implode(" AND ", $filters);
         }
 
-        $result_historial = mysqli_query($conexion, $query_historial);
+        // Preparar la consulta
+        $stmt_historial = $conexion->prepare($query_historial);
+
+        // Vincular parámetros
+        if ($usuario_filter) {
+            $stmt_historial->bindParam(':usuario', $usuario_filter, PDO::PARAM_INT);
+        }
+        if ($sala_filter) {
+            $stmt_historial->bindParam(':sala', $sala_filter, PDO::PARAM_INT);
+        }
+        if ($mesa_filter) {
+            $stmt_historial->bindParam(':mesa', $mesa_filter, PDO::PARAM_INT);
+        }
+        if ($estado_filter) {
+            $stmt_historial->bindParam(':estado', $estado_filter, PDO::PARAM_STR);
+        }
+
+        // Ejecutar la consulta
+        $stmt_historial->execute();
         ?>
 
         <!-- Mostrar resultados en tabla -->
@@ -180,7 +192,7 @@ if (!isset($_SESSION['usuario'])) {
                 </thead>
                 <tbody>
                     <?php
-                    while ($ocupacion = mysqli_fetch_assoc($result_historial)) {
+                    while ($ocupacion = $stmt_historial->fetch(PDO::FETCH_ASSOC)) {
                         echo "<tr>
                         <td>{$ocupacion['nombre_user']}</td>
                         <td>{$ocupacion['nombre_sala']}</td>
