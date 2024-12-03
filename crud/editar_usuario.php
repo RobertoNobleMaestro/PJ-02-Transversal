@@ -16,10 +16,8 @@ try {
         u.nombre_user, 
         u.nombre_real, 
         u.ape_usuario, 
-        u.telefono_usuario, 
         u.rol_user, 
-        r.nombre_rol AS rol, 
-        u.foto_usuario 
+        r.nombre_rol AS rol
     FROM tbl_usuarios u
     INNER JOIN tbl_rol r ON u.rol_user = r.id_rol 
     WHERE id_usuario = :id_usuario";
@@ -53,7 +51,7 @@ try {
 </head>
 <body>
     <h1>Editar Usuario</h1>
-    <form action="actualizar_usuario.php" method="POST" enctype="multipart/form-data">
+    <form action="editar.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id_usuario" value="<?php echo htmlspecialchars($usuario['id_usuario']); ?>">
 
         <label for="nombre_user">Nombre Usuario:</label>
@@ -64,9 +62,6 @@ try {
 
         <label for="ape_usuario">Apellido:</label>
         <input type="text" id="ape_usuario" name="ape_usuario" value="<?php echo htmlspecialchars($usuario['ape_usuario']); ?>" ><br>
-
-        <label for="telefono_usuario">Teléfono:</label>
-        <input type="text" id="telefono_usuario" name="telefono_usuario" value="<?php echo htmlspecialchars($usuario['telefono_usuario']); ?>" ><br>
 
         <label for="rol_user">Rol:</label>
         <select id="rol_user" name="rol_user" >

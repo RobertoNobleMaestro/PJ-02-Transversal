@@ -20,9 +20,7 @@ try {
         u.nombre_user, 
         u.nombre_real, 
         u.ape_usuario, 
-        u.telefono_usuario, 
-        r.nombre_rol AS rol, 
-        u.foto_usuario 
+        r.nombre_rol AS rol 
     FROM tbl_usuarios u
     INNER JOIN tbl_rol r ON u.rol_user = r.id_rol";    
     $stmt = $conexion->prepare($sql);
@@ -68,14 +66,11 @@ try {
         <table>
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Nombre Usuario</th>
                 <th>Nombre Real</th>
                 <th>Apellido</th>
-                <th>Teléfono</th>
                 <th>Rol</th>
-                <th>Foto</th>
-                <th>Acciones</th> <!-- Nueva columna para las acciones -->
+                    <th>Acciones</th> <!-- Nueva columna para las acciones -->
             </tr>
         </thead>
         <tbody>
@@ -83,19 +78,10 @@ try {
             if (!empty($usuarios)) {
                 for ($i = 0; $i < count($usuarios); $i++) {
                     echo '<tr>';
-                    echo '<td>' . htmlspecialchars($usuarios[$i]['id_usuario']) . '</td>';
                     echo '<td>' . htmlspecialchars($usuarios[$i]['nombre_user']) . '</td>';
                     echo '<td>' . htmlspecialchars($usuarios[$i]['nombre_real']) . '</td>';
                     echo '<td>' . htmlspecialchars($usuarios[$i]['ape_usuario']) . '</td>';
-                    echo '<td>' . htmlspecialchars($usuarios[$i]['telefono_usuario']) . '</td>';
                     echo '<td>' . htmlspecialchars($usuarios[$i]['rol']) . '</td>'; // Nombre del rol
-                    echo '<td>';
-                    if (!empty($usuarios[$i]['foto_usuario'])) {
-                        echo '<img src="' . htmlspecialchars($usuarios[$i]['foto_usuario']) . '" alt="Foto" style="width:50px; height:50px;">';
-                    } else {
-                        echo 'Sin foto';
-                    }
-                    echo '</td>';
                     // Columna de acciones con enlaces para editar y eliminar
                     echo '<td>';
                     echo '<a href="./crud/editar_usuario.php?id=' . urlencode($usuarios[$i]['id_usuario']) . '">Editar</a>';
