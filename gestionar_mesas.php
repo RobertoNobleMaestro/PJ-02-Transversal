@@ -67,7 +67,7 @@ try {
 
             <!-- Icono de logout a la derecha -->
             <div class="navbar-right">
-                <a href="./php/./php/salir.php"><img src="./img/logout.png" alt="Logout" class="navbar-icon"></a>
+                <a href="./php/salir.php"><img src="./img/logout.png" alt="Logout" class="navbar-icon"></a>
             </div>
         </nav>
         <div class='mesas-container'>
