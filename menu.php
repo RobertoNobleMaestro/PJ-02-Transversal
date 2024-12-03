@@ -7,24 +7,31 @@ if (!isset($_SESSION['usuario'])) {
     header("Location: index.php?error=sesion_no_iniciada");
     exit();
 }
+
 // Verificar si el SweetAlert ya se mostró
 if (!isset($_SESSION['sweetalert_mostrado'])) {
     $_SESSION['sweetalert_mostrado'] = false;
 }
+
 try {
     $usuario = $_SESSION['usuario'];
-    $query_usuario = "SELECT id_usuario FROM tbl_usuarios WHERE nombre_user = ?";
-    $stmt_usuario = mysqli_prepare($conexion, $query_usuario);
-    mysqli_stmt_bind_param($stmt_usuario, "s", $usuario);
-    mysqli_stmt_execute($stmt_usuario);
-    mysqli_stmt_bind_result($stmt_usuario, $id_usuario);
-    mysqli_stmt_fetch($stmt_usuario);
+
+
+    // Consulta para obtener el id_usuario
+    $query_usuario = "SELECT id_usuario FROM tbl_usuarios WHERE nombre_user = :usuario";
+    $stmt_usuario = $conexion->prepare($query_usuario);
+    $stmt_usuario->bindParam(':usuario', $usuario, PDO::PARAM_STR);
+    $stmt_usuario->execute();
+
+    // Obtener el id_usuario
+    $id_usuario = $stmt_usuario->fetch(PDO::FETCH_ASSOC)['id_usuario'];
+
     $_SESSION['id_usuario'] = $id_usuario;
-    mysqli_stmt_close($stmt_usuario);
-} catch (mysqli_sql_exception $e) {
+} catch (PDOException $e) {
     die("Error en la base de datos: " . $e->getMessage());
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,14 +45,13 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
-<body data-usuario="<?php echo htmlspecialchars($_SESSION['Usuario'], ENT_QUOTES, 'UTF-8'); ?>" data-sweetalert="<?php echo $_SESSION['sweetalert_mostrado'] ? 'true' : 'false'; ?>">
+<body data-usuario="<?php echo htmlspecialchars($_SESSION['usuario'], ENT_QUOTES, 'UTF-8'); ?>" data-sweetalert="<?php echo $_SESSION['sweetalert_mostrado'] ? 'true' : 'false'; ?>">
     <div class="container">
         <nav class="navegacion">
             <!-- Sección izquierda con el logo grande y el ícono adicional más pequeño -->
             <div class="navbar-left">
                 <a href="./menu.php"><img src="./img/logo.png" alt="Logo de la Marca" class="logo" style="width: 100%;"></a>
                 <a href="./registro.php"><img src="./img/lbook.png" alt="Ícono adicional" class="navbar-icon"></a>
-                <form action="./camarero.php" method="post"><button type="submit">Camareros</button></form>
             </div>
 
             <!-- Título en el centro -->
@@ -62,6 +68,7 @@ try {
         </nav>
     </div>
     <!------------FIN BARRA DE NAVEGACION--------------------->
+
     <div class="container-menu">
         <section>
             <a class="image-container" href="./seleccionar_sala?categoria=Comedor">

@@ -43,76 +43,60 @@ if (!isset($_SESSION['usuario'])) {
             </div>
         </nav>
     </div>
+
     <div class="container-menu">
         <section>
             <?php
             $categoria_seleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
             try {
-                mysqli_autocommit($conexion, false);
+                // Preparar consulta para obtener las salas
+                $query_salas = "SELECT * FROM tbl_salas WHERE tipo_sala = :categoria";
+                $stmt_salas = $conexion->prepare($query_salas);
+                $stmt_salas->bindParam(':categoria', $categoria_seleccionada, PDO::PARAM_STR);
+                $stmt_salas->execute();
 
-                mysqli_begin_transaction($conexion, MYSQLI_TRANS_START_READ_WRITE);
+                $result_salas = $stmt_salas->fetchAll(PDO::FETCH_ASSOC);
 
-                $query_salas = "SELECT * FROM tbl_salas WHERE tipo_sala = ?";
-                $stmt_salas = mysqli_prepare($conexion, $query_salas);
-
-                if (!$stmt_salas) {
-                    throw new Exception("Error al preparar la consulta: " . mysqli_error($conexion));
-                }
-
-                mysqli_stmt_bind_param($stmt_salas, "s", $categoria_seleccionada);
-
-                if (!mysqli_stmt_execute($stmt_salas)) {
-                    throw new Exception("Error al ejecutar la consulta: " . mysqli_stmt_error($stmt_salas));
-                }
-
-                $result_salas = mysqli_stmt_get_result($stmt_salas);
-
-                if ($result_salas && mysqli_num_rows($result_salas) > 0) {
-                    while ($sala = mysqli_fetch_assoc($result_salas)) {
+                if ($result_salas && count($result_salas) > 0) {
+                    foreach ($result_salas as $sala) {
                         $id_sala = $sala['id_sala'];
 
                         // Obtener el total de sillas en la sala
                         $query_total_sillas = "
-                SELECT SUM(m.numero_sillas) AS total_sillas
-                FROM tbl_mesas m
-                WHERE m.id_sala = ?";
-                        $stmt_total_sillas = mysqli_prepare($conexion, $query_total_sillas);
-                        mysqli_stmt_bind_param($stmt_total_sillas, "i", $id_sala);
-                        mysqli_stmt_execute($stmt_total_sillas);
-                        $result_total_sillas = mysqli_stmt_get_result($stmt_total_sillas);
-                        $total_sillas = mysqli_fetch_assoc($result_total_sillas)['total_sillas'];
+                            SELECT SUM(m.numero_sillas) AS total_sillas
+                            FROM tbl_mesas m
+                            WHERE m.id_sala = :id_sala";
+                        $stmt_total_sillas = $conexion->prepare($query_total_sillas);
+                        $stmt_total_sillas->bindParam(':id_sala', $id_sala, PDO::PARAM_INT);
+                        $stmt_total_sillas->execute();
+                        $result_total_sillas = $stmt_total_sillas->fetch(PDO::FETCH_ASSOC);
+                        $total_sillas = $result_total_sillas['total_sillas'];
 
                         // Obtener las sillas libres
                         $query_sillas_libres = "
-                SELECT SUM(m.numero_sillas) AS total_sillas_libres
-                FROM tbl_mesas m
-                WHERE m.estado = 'libre' AND m.id_sala = ?";
-                        $stmt_sillas_libres = mysqli_prepare($conexion, $query_sillas_libres);
-                        mysqli_stmt_bind_param($stmt_sillas_libres, "i", $id_sala);
-                        mysqli_stmt_execute($stmt_sillas_libres);
-                        $result_sillas_libres = mysqli_stmt_get_result($stmt_sillas_libres);
-                        $sillas_libres = mysqli_fetch_assoc($result_sillas_libres)['total_sillas_libres'];
+                            SELECT SUM(m.numero_sillas) AS total_sillas_libres
+                            FROM tbl_mesas m
+                            WHERE m.estado = 'libre' AND m.id_sala = :id_sala";
+                        $stmt_sillas_libres = $conexion->prepare($query_sillas_libres);
+                        $stmt_sillas_libres->bindParam(':id_sala', $id_sala, PDO::PARAM_INT);
+                        $stmt_sillas_libres->execute();
+                        $result_sillas_libres = $stmt_sillas_libres->fetch(PDO::FETCH_ASSOC);
+                        $sillas_libres = $result_sillas_libres['total_sillas_libres'];
 
-                        mysqli_stmt_close($stmt_total_sillas);
-                        mysqli_stmt_close($stmt_sillas_libres);
-
-                        // Mostrar la información
+                        // Mostrar la información de la sala con las sillas libres
                         echo "<a class='image-container' href='./gestionar_mesas.php?categoria=" . urlencode($categoria_seleccionada) . "&id_sala=" . $id_sala . "'>
-                    <img src='./img/" . htmlspecialchars($sala['nombre_sala']) . ".jpg' alt='' id='terraza'>
-                    <div class='text-overlay'>" . htmlspecialchars($sala['nombre_sala']) . "<br>Sillas libres: " . ($sillas_libres ?? 0) . "/" . ($total_sillas ?? 0)  . "</div>
-                </a>";
+                            <img src='./img/" . htmlspecialchars($sala['nombre_sala']) . ".jpg' alt='' id='terraza'>
+                            <div class='text-overlay'>" . htmlspecialchars($sala['nombre_sala']) . "<br>Sillas libres: " . ($sillas_libres ?? 0) . "/" . ($total_sillas ?? 0)  . "</div>
+                        </a>";
                     }
                 } else {
                     echo "<p>No hay salas disponibles para esta categoría.</p>";
                 }
 
-                mysqli_stmt_close($stmt_salas);
+                $conexion = null; // Cerrar la conexión
 
-                mysqli_commit($conexion);
-                mysqli_close($conexion);
-            } catch (Exception $e) {
-                mysqli_rollback($conexion);
+            } catch (PDOException $e) {
                 echo "<p>Error: " . $e->getMessage() . "</p>";
             }
             ?>
