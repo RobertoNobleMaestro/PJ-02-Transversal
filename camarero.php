@@ -25,7 +25,7 @@ include_once('./php/conexion.php');
             <img src="./img/logo.png" alt="Logo"> 
         </div>
         <div class="right-side">
-            <form action="crear_camarero.php" method="post" class="form-login">
+            <form action="./php/crear_camarero.php" method="post" class="form-login">
                 <h2>Crear usuario</h2> 
                 <label for="Usuario">Usuario: </label> 
                 <br><br>

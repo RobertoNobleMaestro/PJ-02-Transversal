@@ -45,7 +45,7 @@ if (!isset($_SESSION['usuario'])) {
             </div>
 
             <div class="navbar-right">
-                <a href="./salir.php"><img src="./img/logout.png" alt="Logout" class="navbar-icon"></a>
+                <a href="././php/salir.php"><img src="./img/logout.png" alt="Logout" class="navbar-icon"></a>
             </div>
         </nav>
     </div>
