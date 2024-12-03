@@ -1,38 +1,48 @@
 <?php
 require_once('conexion.php');
 session_start();
-if (isset($_POST['btn_iniciar_sesion'])  && !empty($_POST['Usuario']) && !empty($_POST['Contra'])) {
-    $contra = isset($_POST['Contra']) ? mysqli_real_escape_string($conexion, htmlspecialchars($_POST['Contra'])) : '';
-    $usuario = isset($_POST['Usuario']) ? mysqli_real_escape_string($conexion, htmlspecialchars($_POST['Usuario'])) : '';
-    $_SESSION['usuario'] = $usuario;
-    try {
-        mysqli_autocommit($conexion, false);
-        mysqli_begin_transaction($conexion, MYSQLI_TRANS_START_READ_WRITE);
 
-        $sql = "SELECT nombre_user, contrasena FROM tbl_usuarios WHERE nombre_user = ?";
-        $stmt = mysqli_prepare($conexion, $sql);
-        mysqli_stmt_bind_param($stmt, "s", $usuario);
-        mysqli_stmt_execute($stmt);
-        $resultado = mysqli_stmt_get_result($stmt);
+if (isset($_POST['btn_iniciar_sesion']) && !empty($_POST['Usuario']) && !empty($_POST['Contra'])) {
+    $contra = isset($_POST['Contra']) ? htmlspecialchars($_POST['Contra']) : '';
+    $usuario = isset($_POST['Usuario']) ? htmlspecialchars($_POST['Usuario']) : '';
+    $_SESSION['usuario'] = $usuario;
+
+    try {
+        // Obtener el nombre de usuario, la contraseña y el rol
+        $sql = "SELECT nombre_user, contrasena, rol_user FROM tbl_usuarios WHERE nombre_user = :usuario";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(':usuario', $usuario, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $usuario_db = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        if ($usuario_db = mysqli_fetch_assoc($resultado)) {
+        if ($usuario_db) {
             if (password_verify($contra, $usuario_db['contrasena'])) {
+                // Almacenar el nombre de usuario y el rol en la sesión
                 $_SESSION['Usuario'] = $usuario;
-                header("Location: ../menu.php");    
+                $_SESSION['rol_user'] = $usuario_db['rol_user']; // Almacenar el rol en la sesión
+
+                // Redirigir dependiendo del rol
+                if ($_SESSION['rol_user'] == 1) { // Ejemplo: rol 1 es "Camarero"
+                    header("Location: ../menu.php");
+                } elseif ($_SESSION['rol_user'] == 2) { // Ejemplo: rol 2 es "Administrador"
+                    header("Location: ../menu-admin.php");
+                } else {
+                    // Si el rol no es ninguno de los anteriores, redirigir a una página predeterminada
+                    header("Location: ../menu.php");
+                }
                 exit();
             } else {
-                header('Location:../index.php?error=contrasena_incorrecta');
+                header('Location: ../index.php?error=contrasena_incorrecta');
             }
         } else {
-            header('Location:../index.php?error=usuario_no_encontrado');
+            header('Location: ../index.php?error=usuario_no_encontrado');
         }
 
-        mysqli_stmt_close($stmt);
-        mysqli_commit($conexion);
     } catch (Exception $e) {
-        mysqli_rollback($conexion);
         echo "Se produjo un error: " . htmlspecialchars($e->getMessage());
     }
 } else {
     header('Location: ../index.php?error=campos_vacios');
 }
+?>

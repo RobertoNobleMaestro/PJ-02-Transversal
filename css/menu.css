@@ -207,6 +207,22 @@ section img:hover {
 .btn-estado[disabled] {
     background-color: #d32f2f;
 }
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+a {
+    text-decoration: none;
+    color: blue;
+    margin-right: 10px;
+}
 
 @media (min-width: 12px) {
     .navbar-title {
