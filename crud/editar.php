@@ -1,7 +1,15 @@
 <?php
 require_once('../php/conexion.php');
 session_start();
+if (!isset($_SESSION['usuario'])) {
+    header("Location: index.php?error=sesion_no_iniciada");
+    exit();
+}
 
+// Verificar si el SweetAlert ya se mostró
+if (!isset($_SESSION['sweetalert_mostrado'])) {
+    $_SESSION['sweetalert_mostrado'] = false;
+}
 // Verificar que se haya enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
     $id_usuario = htmlspecialchars($_POST['id_usuario']);

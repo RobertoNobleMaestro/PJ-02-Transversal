@@ -1,12 +1,20 @@
 <?php
 require_once('../php/conexion.php');
-
+session_start();
 // Verificar que se haya enviado el ID del usuario
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     echo "ID de usuario no especificado.";
     exit();
 }
+if (!isset($_SESSION['usuario'])) {
+    header("Location: index.php?error=sesion_no_iniciada");
+    exit();
+}
 
+// Verificar si el SweetAlert ya se mostró
+if (!isset($_SESSION['sweetalert_mostrado'])) {
+    $_SESSION['sweetalert_mostrado'] = false;
+}
 $id_usuario = htmlspecialchars($_GET['id']);
 
 try {
