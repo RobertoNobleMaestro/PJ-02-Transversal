@@ -82,38 +82,13 @@ try {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .tabla-container {
-            margin-top: 20px;
-        }
-        h2 {
-            margin-top: 40px;
-        }
-        .btn-container {
-            display: flex;
-            gap: 10px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <nav class="navegacion">
             <div class="navbar-left">
-                <a href="./menu.php"><img src="./img/logo.png" alt="Logo de la Marca" class="logo" style="width: 100%;"></a>
-                <a href="./registro.php"><img src="./img/lbook.png" alt="Ícono adicional" class="navbar-icon"></a>
+                <a href="./menu-recursos.php"><img src="./img/logo.png" alt="Logo de la Marca" class="logo" style="width: 100%;"></a>
+                <a href="./menu-admin.php"><img src="./img/user-icon.svg" alt="Ícono adicional" class="navbar-icon"></a>
             </div>
             <div class="navbar-title">
                 <h3>Lista de recursos</h3>
@@ -162,19 +137,16 @@ try {
         <br>
 
         <button class="btn btn-primary" onclick="location.href='./crud/añadir_recurso.php'">Añadir recurso</button>
-        <button class="btn btn-primary" onclick="location.href='./menu-admin.php'">Gestionar usuario</button>
-        <br><br>
-
-        <h1>Salas y Mesas</h1>
+        <br>
 
         <?php
         // Recorrer los tipos de salas
         foreach ($salas as $tipo_sala => $salas_tipo) {
             echo "<div class='tabla-container'>";
-            echo "<h2>" . htmlspecialchars($tipo_sala) . "</h2>";  // Mostrar el tipo de sala (Comedor, Sala Privada, Terraza)
+            echo "<h2 class='titulos'>" . htmlspecialchars($tipo_sala) . "</h2>";  // Mostrar el tipo de sala (Comedor, Sala Privada, Terraza)
 
             // Mostrar las mesas dentro de cada sala
-            echo "<table>";
+            echo "<table class='table'>";
             echo "<thead>";
             echo "<tr>";
             echo "<th>Nombre de la Sala</th>";

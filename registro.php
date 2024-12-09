@@ -48,7 +48,7 @@ if (!isset($_SESSION['usuario'])) {
     <br>
 
     <div id="historial-container" class="container">
-        <h2 id="titulo-historial" class="text-white">Historial de Ocupaciones</h2>
+        <h2 id="titulo-historial" class="text-white" style="background-color: none;">Historial de Ocupaciones</h2>
 
         <form method="GET" action="registro.php" class="mt-3">
             <div class="d-flex flex-wrap align-items-center">
