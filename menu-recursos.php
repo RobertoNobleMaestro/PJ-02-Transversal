@@ -136,7 +136,7 @@ try {
         
         <br>
 
-        <button class="btn btn-primary" onclick="location.href='./crud/añadir_recurso.php'">Añadir recurso</button>
+        <button class="btn btn-primary" onclick="location.href='./crud-recursos/añadir_recurso.php'">Añadir recurso</button>
         <br>
 
         <?php
