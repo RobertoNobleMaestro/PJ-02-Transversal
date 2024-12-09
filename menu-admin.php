@@ -40,12 +40,32 @@ try {
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
+<style>
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .tabla-container {
+            margin-top: 20px;
+        }
+        h2 {
+            margin-top: 40px;
+        }
+        .btn-container {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
 <body>
 <div class="container">
         <nav class="navegacion">
             <div class="navbar-left">
-                <a href="./menu.php"><img src="./img/logo.png" alt="Logo de la Marca" class="logo" style="width: 100%;"></a>
-                <a href="./registro.php"><img src="./img/lbook.png" alt="Ícono adicional" class="navbar-icon"></a>
+                <a href="./menu-admin.php"><img src="./img/logo.png" alt="Logo de la Marca" class="logo" style="width: 100%;"></a>
+                <a href="./menu-recursos.php"><img src="./img/lbook.png" alt="Ícono adicional" class="navbar-icon"></a>
             </div>
             <div class="navbar-title">
                 <h3>Lista de usuarios</h3>
@@ -58,10 +78,9 @@ try {
         <br>
         <div>
             <button class="btn btn-primary" onclick="location.href='./crud/añadir_usuario.php'">Añadir Usuario</button>
-            <button class="btn btn-primary" onclick="location.href='./menu-recursos.php'">Gestionar recursos</button>
         </div>
         <br>
-        <table>
+        <table class='table'>
         <thead>
             <tr>
                 <th>Nombre Usuario</th>
@@ -81,8 +100,8 @@ try {
                     echo '<td>' . htmlspecialchars($usuario['ape_usuario']) . '</td>';
                     echo '<td>' . htmlspecialchars($usuario['rol']) . '</td>';
                     echo '<td>';
-                    echo '<a href="./crud/editar_usuario.php?id=' . urlencode($usuario['id_usuario']) . '">Editar</a>';
-                    echo '<a href="./crud/eliminar_usuario.php?id=' . urlencode($usuario['id_usuario']) . '">Eliminar</a>';
+                    echo '<a href="./crud/editar_usuario.php?id=' . urlencode($usuario['id_usuario']) . '" class="btn btn-warning">Editar</a>';
+                    echo '<a href="./crud/eliminar_usuario.php?id=' . urlencode($usuario['id_usuario']) . '" class="btn btn-danger">Eliminar</a>';
                     echo '</td>';
                     echo '</tr>';
                 }

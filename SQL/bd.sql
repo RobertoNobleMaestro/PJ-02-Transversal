@@ -9,7 +9,6 @@ CREATE TABLE tbl_usuarios (
     nombre_user VARCHAR(100),
     nombre_real VARCHAR(30) NOT NULL,
     ape_usuario VARCHAR(30) NOT NULL,
-    telefono_usuario CHAR(9) NOT NULL,
     contrasena VARCHAR(100),
     rol_user INT NOT NULL,
     foto_usuario VARCHAR(255) NULL
@@ -86,13 +85,13 @@ INSERT INTO tbl_rol (nombre_rol) VALUES
     ('Personal de Mantenimiento');
 
 -- Insertar usuarios (camareros) adaptados (sin id_usuario porque es AUTO_INCREMENT)
-INSERT INTO tbl_usuarios (nombre_user, nombre_real, ape_usuario, telefono_usuario, contrasena, rol_user, foto_usuario) VALUES
+INSERT INTO tbl_usuarios (nombre_user, nombre_real, ape_usuario, contrasena, rol_user, foto_usuario) VALUES
 
-    ('Jorge', 'Jorge', 'López', '123456789', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa',2, NULL),
-    ('Olga', 'Olga', 'Gómez', '987654321', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1, NULL),
-    ('Miguel', 'Miguel', 'Pérez', '456123789', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1, NULL),
-    ('Ana', 'Ana', 'Martínez', '654987321', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 3, NULL),
-    ('Luis', 'Luis', 'Ramírez', '789123456', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 4, NULL);
+    ('Jorge', 'Jorge', 'López', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa',2, NULL),
+    ('Olga', 'Olga', 'Gómez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1, NULL),
+    ('Miguel', 'Miguel', 'Pérez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1, NULL),
+    ('Ana', 'Ana', 'Martínez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 3, NULL),
+    ('Luis', 'Luis', 'Ramírez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 4, NULL);
 
 -- Insertar salas
 INSERT INTO tbl_salas (nombre_sala, tipo_sala) VALUES
