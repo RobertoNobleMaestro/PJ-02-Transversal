@@ -122,7 +122,7 @@ try {
                     <label for="estado" class="text-white">Estado Sala:</label>
                     <select name="estado" class="form-control form-control-sm" style="height: 40px; width: 200px;">
                         <option value="">Todos</option>
-                        <option value="libre" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'libre') ? 'selected' : ''; ?>>Libre</option>
+                        <option value=" libre" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'libre') ? 'selected' : ''; ?>>Libre</option>
                         <option value="ocupada" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'ocupada') ? 'selected' : ''; ?>>Ocupada</option>
                     </select>
                 </div>
@@ -135,8 +135,8 @@ try {
         </form>
         
         <br>
-
         <button class="btn btn-primary" onclick="location.href='./crud-recursos/añadir_recurso.php'">Añadir recurso</button>
+
         <br>
 
         <?php
@@ -146,7 +146,7 @@ try {
             echo "<h2 class='titulos'>" . htmlspecialchars($tipo_sala) . "</h2>";  // Mostrar el tipo de sala (Comedor, Sala Privada, Terraza)
 
             // Mostrar las mesas dentro de cada sala
-            echo "<table class='table'>";
+            echo "<table class='tabla'>";
             echo "<thead>";
             echo "<tr>";
             echo "<th>Nombre de la Sala</th>";
@@ -179,7 +179,7 @@ try {
                     echo "<td class='btn-container'>";
                     // Modificamos las URLs para incluir el tipo de sala, nombre de la sala y el id de la mesa
                     echo "<a href='./crud-recursos/editar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-warning'>Editar</a>";
-                    echo "<a href='./crud-recursos/eliminar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-danger' onclick='return confirm(\"¿Estás seguro de eliminar esta mesa?\")'>Eliminar</a>";
+                    echo "<a href='./crud-recursos/eliminar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-danger'>Eliminar</a>";
                     echo "</td>";
 
                     echo "</tr>";

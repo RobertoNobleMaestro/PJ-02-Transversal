@@ -2,7 +2,7 @@
 require_once('../php/conexion.php');
 session_start();
 if (!isset($_SESSION['usuario'])) {
-    header("Location: index.php?error=sesion_no_iniciada");
+    header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_crear_usuario'])) {
@@ -33,4 +33,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_crear_usuario']))
         echo "Error al añadir el usuario: " . htmlspecialchars($e->getMessage());
     }
 }
-?>Error al añadir el usuario: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+?>
