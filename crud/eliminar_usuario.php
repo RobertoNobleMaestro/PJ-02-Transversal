@@ -80,15 +80,20 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar Usuario</title>
-    <link rel="stylesheet" href="./css/eliminar.css">
+    <link rel="stylesheet" href="../css/formulario.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 </head>
 <body>
-    <div class="container">
+    <div class="container-form">
         <h1>Eliminar Usuario</h1>
         <p>¿Estás seguro de que deseas eliminar al usuario <strong><?php echo htmlspecialchars($usuario['nombre_user']); ?></strong>?</p>
         <form action="eliminar_usuario.php?id=<?php echo $id_usuario; ?>" method="post">
-            <button type="submit" name="confirmar_eliminar" class="confirmar-btn">Confirmar Eliminación</button>
+            <button type="submit" name="confirmar_eliminar"  class="form-button">Confirmar Eliminación</button>
+            <br><br>
             <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
         </form>
     </div>

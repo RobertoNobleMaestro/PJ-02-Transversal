@@ -2,7 +2,7 @@
 require_once('../php/conexion.php');
 session_start();
 if (!isset($_SESSION['usuario'])) {
-    header("Location: index.php?error=sesion_no_iniciada");
+    header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }
 

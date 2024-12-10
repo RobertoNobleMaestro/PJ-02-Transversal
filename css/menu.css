@@ -226,6 +226,7 @@ table {
 .btn-container {
     display: flex;
     gap: 10px;
+justify-content: center;
 }
 a {
     text-decoration: none;
@@ -276,12 +277,15 @@ a {
         font-size: 20px;
     }
 
-    .table td, .table th {
+    .tabla td, .tabla th {
         padding: 8px;
         font-size: 12px;
         border: 1px solid #ddd;
+        align-items: center;
+        text-align: center;
+        background-color: white;
     }
-    .table thead th {
+    .tabla thead th {
         background-color: #000000;
         color: white;
         font-weight: bold;
@@ -332,18 +336,18 @@ a {
         margin-top: 0;
     }
  
-    .table {
+    .tabla {
         border-collapse: collapse;
         width: 100%;
         margin: 0 auto; 
     }
-    .table th, .table td {
+    .tabla th, .tabla td {
         padding: 12px;
         text-align: center;
         border: 1px solid #ddd;
         font-size: 16px;
     }
-    .table thead th {
+    .tabla thead th {
         background-color: #A7A1A1;
         color: white;
         font-weight: bold;

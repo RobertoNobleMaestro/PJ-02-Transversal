@@ -122,7 +122,7 @@ try {
                     <label for="estado" class="text-white">Estado Sala:</label>
                     <select name="estado" class="form-control form-control-sm" style="height: 40px; width: 200px;">
                         <option value="">Todos</option>
-                        <option value="libre" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'libre') ? 'selected' : ''; ?>>Libre</option>
+                        <option value=" libre" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'libre') ? 'selected' : ''; ?>>Libre</option>
                         <option value="ocupada" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'ocupada') ? 'selected' : ''; ?>>Ocupada</option>
                     </select>
                 </div>
@@ -135,8 +135,8 @@ try {
         </form>
         
         <br>
-
         <button class="btn btn-primary" onclick="location.href='./crud-recursos/añadir_recurso.php'">Añadir recurso</button>
+
         <br>
 
         <?php
@@ -146,7 +146,7 @@ try {
             echo "<h2 class='titulos'>" . htmlspecialchars($tipo_sala) . "</h2>";  // Mostrar el tipo de sala (Comedor, Sala Privada, Terraza)
 
             // Mostrar las mesas dentro de cada sala
-            echo "<table class='table'>";
+            echo "<table class='tabla'>";
             echo "<thead>";
             echo "<tr>";
             echo "<th>Nombre de la Sala</th>";
