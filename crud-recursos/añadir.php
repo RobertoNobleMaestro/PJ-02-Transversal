@@ -16,15 +16,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nombre_sala = htmlspecialchars($_POST['nombre_sala']);
             $tipo_sala = htmlspecialchars($_POST['tipo_sala']);
             $numero_mesas = htmlspecialchars($_POST['numero_mesas']);
-            $sillas_por_mesa = 4; // Default value for chairs per table
+            $sillas_por_mesa = 4; 
+            $nombre_imagen = ''; 
+
+            // Verificar si se ha subido una imagen
+            if (isset($_FILES['imagen_sala']) && $_FILES['imagen_sala']['error'] === UPLOAD_ERR_OK) {
+                $imagen_temp = $_FILES['imagen_sala']['tmp_name'];
+                $imagen_nombre = $_FILES['imagen_sala']['name'];
+                $imagen_ext = strtolower(pathinfo($imagen_nombre, PATHINFO_EXTENSION));
+
+                // Validar la extensión de la imagen
+                $imagenes_permitidas = ['jpg', 'jpeg', 'png', 'gif'];
+                if (in_array($imagen_ext, $imagenes_permitidas)) {
+                    // Generar un nombre único para la imagen en el directorio actual (no cambiar el nombre original)
+                    $nombre_imagen = $imagen_nombre; // Aquí estamos guardando el nombre original de la imagen
+
+                    // Especificar el directorio de destino donde se guardará la imagen
+                    $directorio_destino = '../img/' . $nombre_imagen;
+                    
+                    // Mover la imagen al directorio de destino
+                    if (!move_uploaded_file($imagen_temp, $directorio_destino)) {
+                        echo "Error al subir la imagen.";
+                        exit();
+                    }
+                } else {
+                    echo "Solo se permiten imágenes con los siguientes formatos: jpg, jpeg, png, gif.";
+                    exit();
+                }
+            }
 
             if (!empty($nombre_sala) && !empty($tipo_sala) && !empty($numero_mesas)) {
-                // Insertar la sala en la base de datos
-                $sql_sala = "INSERT INTO tbl_salas (nombre_sala, tipo_sala) VALUES (:nombre_sala, :tipo_sala)";
+                // Insertar la sala en la base de datos (guardar solo el nombre de la imagen)
+                $sql_sala = "INSERT INTO tbl_salas (nombre_sala, tipo_sala, imagen_sala) VALUES (:nombre_sala, :tipo_sala, :imagen_sala)";
                 $stmt_sala = $conexion->prepare($sql_sala);
                 $stmt_sala->execute([
                     ':nombre_sala' => $nombre_sala,
-                    ':tipo_sala' => $tipo_sala
+                    ':tipo_sala' => $tipo_sala,
+                    ':imagen_sala' => $nombre_imagen // Guardar solo el nombre de la imagen en la base de datos
                 ]);
 
                 // Obtener el ID de la sala recién creada
@@ -52,9 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         } elseif ($accion === 'añadir_mesa') {
             // Añadir mesas a una sala existente
-        $id_sala = htmlspecialchars($_POST['sala_mesa']);
-        $numero_mesas = htmlspecialchars($_POST['numero_mesas']);
-        $sillas_por_mesa = htmlspecialchars($_POST['sillas_por_mesa'] ?? 4);
+            $id_sala = htmlspecialchars($_POST['sala_mesa']);
+            $numero_mesas = htmlspecialchars($_POST['numero_mesas']);
+            $sillas_por_mesa = htmlspecialchars($_POST['sillas_por_mesa'] ?? 4);
 
             if (!empty($id_sala) && !empty($numero_mesas)) {
                 // Obtener el último número de mesa de la sala seleccionada

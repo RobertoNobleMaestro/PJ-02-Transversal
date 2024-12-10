@@ -13,8 +13,6 @@ try {
     echo "Error al obtener los roles: " . htmlspecialchars($e->getMessage());
     die();
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
