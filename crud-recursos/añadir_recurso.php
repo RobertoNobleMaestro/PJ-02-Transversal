@@ -80,7 +80,7 @@ try {
     <button class="btn btn-primary" type="submit">Confirmar Acción</button>
     <br><br>
     <!-- Botón Cancelar -->
-        <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
+        <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
     </form>
 
     </div>

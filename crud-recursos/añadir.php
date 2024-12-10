@@ -9,49 +9,73 @@ if (!isset($_SESSION['usuario'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = htmlspecialchars($_POST['accion']);
+
     try {
-        if ($accion === 'añadir_mesa') {
-            // Añadir mesas a una sala existente
-            $id_sala = htmlspecialchars($_POST['sala_mesa']);
-            $numero_mesa = (int) htmlspecialchars($_POST['numero_mesa']);
-            $sillas_por_mesa = (int) htmlspecialchars($_POST['numero_sillas'] ?? 4);
+        if ($accion === 'crear_sala') {
+            // Crear una nueva sala con mesas predeterminadas
+            $nombre_sala = htmlspecialchars($_POST['nombre_sala']);
+            $tipo_sala = htmlspecialchars($_POST['tipo_sala']);
+            $numero_mesas = htmlspecialchars($_POST['numero_mesas']);
+            $sillas_por_mesa = 4; // Default value for chairs per table
 
-            // Verifica que el valor de $numero_mesa es un número mayor que 0
-            if ($numero_mesa <= 0) {
-                header("Location: ../menu-recursos.php?error=numero_mesa_no_valido");
-                exit();
-            }
+            if (!empty($nombre_sala) && !empty($tipo_sala) && !empty($numero_mesas)) {
+                // Insertar la sala en la base de datos
+                $sql_sala = "INSERT INTO tbl_salas (nombre_sala, tipo_sala) VALUES (:nombre_sala, :tipo_sala)";
+                $stmt_sala = $conexion->prepare($sql_sala);
+                $stmt_sala->execute([
+                    ':nombre_sala' => $nombre_sala,
+                    ':tipo_sala' => $tipo_sala
+                ]);
 
-            if (empty($id_sala)) {
-                header("Location: ../menu-recursos.php?error=id_sala_no_seleccionada");
-                exit();
-            }
+                // Obtener el ID de la sala recién creada
+                $id_sala = $conexion->lastInsertId();
 
-            if (!empty($id_sala) && $numero_mesa > 0) {
-                // Verificar si el número de mesa ya existe en la sala
-                $sql_check_mesa = "SELECT COUNT(*) FROM tbl_mesas WHERE id_sala = :id_sala AND numero_mesa = :numero_mesa";
-                $stmt_check_mesa = $conexion->prepare($sql_check_mesa);
-                $stmt_check_mesa->execute([':id_sala' => $id_sala, ':numero_mesa' => $numero_mesa]);
-                $mesa_existente = $stmt_check_mesa->fetchColumn();
-
-                if ($mesa_existente > 0) {
-                    header("Location: ../menu-recursos.php?error=numero_mesa_ya_existente");
-                    exit();
-                }
-
-                // Ejecutar el INSERT para la mesa
+                // Insertar mesas asociadas a la nueva sala
                 $sql_mesa = "INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES (:numero_mesa, :id_sala, :numero_sillas, 'libre')";
                 $stmt_mesa = $conexion->prepare($sql_mesa);
 
-                // Insertar la mesa con el número especificado
-                $stmt_mesa->execute([
-                    ':numero_mesa' => $numero_mesa,
-                    ':id_sala' => $id_sala,
-                    ':numero_sillas' => $sillas_por_mesa
-                ]);
+                for ($i = 1; $i <= $numero_mesas; $i++) {
+                    $numero_mesa = $id_sala * 100 + $i; // Ejemplo: Sala 1 -> Mesas 101, 102...
+                    $stmt_mesa->execute([
+                        ':numero_mesa' => $numero_mesa,
+                        ':id_sala' => $id_sala,
+                        ':numero_sillas' => $sillas_por_mesa
+                    ]);
+                }
 
-                // Redirigir con éxito
-                header("Location: ../menu-recursos.php?mensaje=mesa_agregada");
+                header("Location: ../menu-recursos.php?mensaje=sala_creada");
+                exit();
+            } else {
+                header("Location: ../menu-recursos.php?error=datos_incompletos");
+                exit();
+            }
+
+        } elseif ($accion === 'añadir_mesa') {
+            // Añadir mesas a una sala existente
+        $id_sala = htmlspecialchars($_POST['sala_mesa']);
+        $numero_mesas = htmlspecialchars($_POST['numero_mesas']);
+        $sillas_por_mesa = htmlspecialchars($_POST['sillas_por_mesa'] ?? 4);
+
+            if (!empty($id_sala) && !empty($numero_mesas)) {
+                // Obtener el último número de mesa de la sala seleccionada
+                $sql_max_mesa = "SELECT MAX(numero_mesa) as max_mesa FROM tbl_mesas WHERE id_sala = :id_sala";
+                $stmt_max_mesa = $conexion->prepare($sql_max_mesa);
+                $stmt_max_mesa->execute([':id_sala' => $id_sala]);
+                $max_mesa = $stmt_max_mesa->fetch(PDO::FETCH_ASSOC)['max_mesa'] ?? ($id_sala * 100);
+
+                $sql_mesa = "INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES (:numero_mesa, :id_sala, :numero_sillas, 'libre')";
+                $stmt_mesa = $conexion->prepare($sql_mesa);
+
+                for ($i = 1; $i <= $numero_mesas; $i++) {
+                    $numero_mesa = $max_mesa + $i;
+                    $stmt_mesa->execute([
+                        ':numero_mesa' => $numero_mesa,
+                        ':id_sala' => $id_sala,
+                        ':numero_sillas' => $sillas_por_mesa
+                    ]);
+                }
+
+                header("Location: ../menu-recursos.php?mensaje=mesas_agregadas");
                 exit();
             } else {
                 header("Location: ../menu-recursos.php?error=datos_incompletos");

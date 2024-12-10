@@ -49,7 +49,6 @@ CREATE TABLE tbl_ocupaciones (
 -- Crear la nueva tabla: Reservas de recursos (por ejemplo, camareros en un horario específico)
 CREATE TABLE tbl_reservas_recursos (
     id_reserva INT PRIMARY KEY AUTO_INCREMENT,  -- Cambié el nombre de la columna a id_reserva
-    id_usuario INT NOT NULL,                    -- Usuario (camarero, gerente, etc.)
     fecha_reserva DATE NOT NULL,                -- Fecha de la reserva
     hora_inicio TIME NOT NULL,                  -- Hora de inicio de la reserva
     hora_fin TIME NOT NULL,                     -- Hora de finalización de la reserva
@@ -70,9 +69,6 @@ ALTER TABLE tbl_ocupaciones
 ADD CONSTRAINT fk_ocupaciones_usuarios FOREIGN KEY (id_usuario) REFERENCES tbl_usuarios(id_usuario),
 ADD CONSTRAINT fk_ocupaciones_mesas FOREIGN KEY (id_mesa) REFERENCES tbl_mesas(id_mesa);
 
--- Agregar las claves foráneas en la tabla tbl_reservas_recursos
-ALTER TABLE tbl_reservas_recursos
-ADD CONSTRAINT fk_reservas_recursos_usuario FOREIGN KEY (id_usuario) REFERENCES tbl_usuarios(id_usuario);
 ALTER TABLE tbl_reservas_recursos
 ADD CONSTRAINT fk_reservas_mesas FOREIGN KEY (id_mesa) REFERENCES tbl_mesas(id_mesa);
 
@@ -137,10 +133,18 @@ INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES
     (505, 5, 4, 'libre'),
     (506, 5, 4, 'libre'),
 -- Mesas Sala Privada
-    (601, 6, 12, 'libre'),
-    (701, 7, 12, 'libre'),
-    (801, 8, 16, 'libre'),
-    (901, 9, 18, 'libre');
+    -- Mesas Sala Privada 1
+    (602, 6, 10, 'libre'),
+    (603, 6, 8, 'libre'),
+    -- Mesas Sala Privada 2
+    (702, 7, 12, 'libre'),
+    (703, 7, 14, 'libre'),
+    -- Mesas Sala Privada 3
+    (802, 8, 16, 'libre'),
+    (803, 8, 20, 'libre'),
+    -- Mesas Sala Privada 4
+    (902, 9, 18, 'libre'),
+    (903, 9, 14, 'libre');
 
 -- Insertar ocupaciones
 INSERT INTO tbl_ocupaciones (id_usuario, id_mesa, fecha_inicio, fecha_fin) VALUES
@@ -149,12 +153,6 @@ INSERT INTO tbl_ocupaciones (id_usuario, id_mesa, fecha_inicio, fecha_fin) VALUE
     (3, 6, '2024-12-02 20:00:00', '2024-12-02 22:00:00'),
     (4, 7, '2024-12-03 12:00:00', '2024-12-03 14:00:00');
 
--- Insertar reservas de recursos (manteniendo la estructura original, sin las tablas extras de recursos)
--- Asumiendo que 'id_recurso' corresponde a 'id_mesa' en la tabla tbl_reservas_recursos
-INSERT INTO tbl_reservas_recursos (id_usuario, fecha_reserva, hora_inicio, hora_fin, id_mesa) VALUES
-    (1, '2024-12-01', '10:00:00', '12:00:00', 1),
-    (2, '2024-12-01', '14:00:00', '16:00:00', 3),
-    (3, '2024-12-01', '18:00:00', '20:00:00', 4);
 
 -- Insertar más mesas en terrazas y salas privadas
 INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES

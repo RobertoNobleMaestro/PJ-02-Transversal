@@ -61,11 +61,17 @@ try {
         <form method="POST" action="eliminar_sala.php">
             <input type="hidden" name="id_mesa" value="<?php echo htmlspecialchars($id_mesa); ?>">
             <input type="hidden" name="id_sala" value="<?php echo htmlspecialchars($id_sala); ?>">
-
+            <div class="mb-3">
+                <label for="eliminar_sala" class="form-label">¿Deseas eliminar también la sala y todas las mesas asociadas?</label>
+                <select class="form-control" id="eliminar_sala" name="eliminar_sala">
+                    <option value="no" selected>No</option>
+                    <option value="si">Sí</option>
+                </select>
+            </div>
             <button type="submit" class="btn btn-danger">Eliminar</button>
         </form>
         <br>
-        <button type="submit" class="btn btn-primary" onclick="window.location.href='../menu-recursos.php'">Volver</button>
+        <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
     </div>
 </body>
 </html>

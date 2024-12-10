@@ -14,6 +14,12 @@ try {
     $sala_filter = isset($_GET['sala']) ? $_GET['sala'] : '';
     $estado_filter = isset($_GET['estado']) ? $_GET['estado'] : '';
 
+    // Asegúrate de limpiar el valor de estado, eliminando espacios adicionales
+    if ($estado_filter) {
+        // Decodificar la URL para convertir cualquier código de espacio %20 o +
+        $estado_filter = urldecode($estado_filter);  // Decodificar cualquier URL codificada
+    }
+
     // Construir la consulta con los filtros aplicados
     $sql = "
         SELECT 
@@ -22,6 +28,7 @@ try {
             s.tipo_sala,
             m.id_mesa,
             m.numero_mesa,
+            s.imagen_sala,
             m.numero_sillas,
             m.estado
         FROM 
@@ -70,6 +77,7 @@ try {
     echo "Error al obtener los datos: " . htmlspecialchars($e->getMessage());
     die();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -122,7 +130,7 @@ try {
                     <label for="estado" class="text-white">Estado Sala:</label>
                     <select name="estado" class="form-control form-control-sm" style="height: 40px; width: 200px;">
                         <option value="">Todos</option>
-                        <option value=" libre" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'libre') ? 'selected' : ''; ?>>Libre</option>
+                        <option value="libre" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'libre') ? 'selected' : ''; ?>>Libre</option>
                         <option value="ocupada" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'ocupada') ? 'selected' : ''; ?>>Ocupada</option>
                     </select>
                 </div>
@@ -138,59 +146,67 @@ try {
         <button class="btn btn-primary" onclick="location.href='./crud-recursos/añadir_recurso.php'">Añadir recurso</button>
 
         <br>
-
         <?php
-        // Recorrer los tipos de salas
-        foreach ($salas as $tipo_sala => $salas_tipo) {
-            echo "<div class='tabla-container'>";
-            echo "<h2 class='titulos'>" . htmlspecialchars($tipo_sala) . "</h2>";  // Mostrar el tipo de sala (Comedor, Sala Privada, Terraza)
+            // Recorrer los tipos de salas
+            foreach ($salas as $tipo_sala => $salas_tipo) {
+                echo "<div class='tabla-container'>";
+                echo "<h2 class='titulos'>" . htmlspecialchars($tipo_sala) . "</h2>";  // Mostrar el tipo de sala (Comedor, Sala Privada, Terraza)
 
-            // Mostrar las mesas dentro de cada sala
-            echo "<table class='tabla'>";
-            echo "<thead>";
-            echo "<tr>";
-            echo "<th>Nombre de la Sala</th>";
-            echo "<th>Número de Mesa</th>";
-            echo "<th>Estado</th>";
-            echo "<th>Número de Sillas</th>";
-            echo "<th>Acciones</th>"; // Columna para los botones de editar y eliminar
-            echo "</tr>";
-            echo "</thead>";
-            echo "<tbody>";
-
-            // Recorrer las salas dentro de cada tipo de sala
-            foreach ($salas_tipo as $nombre_sala => $mesas_sala) {
-                // Mostrar la sala como una fila completa, si tiene mesas
+                // Mostrar las mesas dentro de cada sala
+                echo "<table class='tabla'>";
+                echo "<thead>";
                 echo "<tr>";
-                echo "<td rowspan='" . count($mesas_sala) . "'>" . htmlspecialchars($nombre_sala) . "</td>";
+                echo "<th>Nombre de la Sala</th>";
+                echo "<th>Imagen de la sala</th>"; 
+                echo "<th>Número de Mesa</th>";
+                echo "<th>Estado</th>";
+                echo "<th>Número de Sillas</th>";
+                echo "<th>Acciones</th>"; // Columna para los botones de editar y eliminar
+                echo "</tr>";
+                echo "</thead>";
+                echo "<tbody>";
 
-                // Mostrar las mesas asociadas a la sala
-                $first_row = true;
-                foreach ($mesas_sala as $mesa) {
-                    if (!$first_row) {
-                        echo "<tr>";
-                    }
+                // Recorrer las salas dentro de cada tipo de sala
+                foreach ($salas_tipo as $nombre_sala => $mesas_sala) {
+                    // Mostrar la sala como una fila completa, si tiene mesas
+                    echo "<tr>";
+                    echo "<td rowspan='" . count($mesas_sala) . "'>" . htmlspecialchars($nombre_sala) . "</td>";
 
-                    echo "<td>" . htmlspecialchars($mesa['numero_mesa']) . "</td>";
-                    echo "<td>" . htmlspecialchars($mesa['estado']) . "</td>";
-                    echo "<td>" . htmlspecialchars($mesa['numero_sillas']) . "</td>";
-                    
-                    // Botones para editar y eliminar
-                    echo "<td class='btn-container'>";
-                    // Modificamos las URLs para incluir el tipo de sala, nombre de la sala y el id de la mesa
-                    echo "<a href='./crud-recursos/editar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-warning'>Editar</a>";
-                    echo "<a href='./crud-recursos/eliminar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-danger'>Eliminar</a>";
+                    // Ruta de la imagen: usa el nombre de la sala para formar la URL de la imagen
+                    $imagen_sala = './img/' . $nombre_sala . '.jpg';
+
+                    // Columna de imagen (Hacer que la imagen ocupe todo el cuadrado)
+                    echo "<td rowspan='" . count($mesas_sala) . "'>";
+                    echo "<img src='$imagen_sala' alt='Imagen de la sala' style='width: 150px; object-fit: cover;'>";
                     echo "</td>";
 
-                    echo "</tr>";
-                    $first_row = false; // La primera fila no se repite
-                }
-            }
+                    // Mostrar las mesas asociadas a la sala
+                    $first_row = true;
+                    foreach ($mesas_sala as $mesa) {
+                        if (!$first_row) {
+                            echo "<tr>";
+                        }
 
-            echo "</tbody>";
-            echo "</table>";
-            echo "</div>";  // Fin del contenedor de la tabla
-        }
+                        echo "<td>" . htmlspecialchars($mesa['numero_mesa']) . "</td>";
+                        echo "<td>" . htmlspecialchars($mesa['estado']) . "</td>";
+                        echo "<td>" . htmlspecialchars($mesa['numero_sillas']) . "</td>";
+
+                        // Botones para editar y eliminar
+                        echo "<td class='btn-container' rowspan='" . count($mesas_sala) . "'>";
+                        // Modificamos las URLs para incluir el tipo de sala, nombre de la sala y el id de la mesa
+                        echo "<a href='./crud-recursos/editar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-warning'>Editar</a>";
+                        echo "<a href='./crud-recursos/eliminar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-danger'>Eliminar</a>";
+                        echo "</td>";
+
+                        echo "</tr>";
+                        $first_row = false; // La primera fila no se repite
+                    }
+                }
+
+                echo "</tbody>";
+                echo "</table>";
+                echo "</div>";  // Fin del contenedor de la tabla
+            }
         ?>
     </div>
 </body>

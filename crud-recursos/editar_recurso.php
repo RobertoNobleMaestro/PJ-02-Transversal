@@ -120,7 +120,7 @@ try {
             <button type="submit" class="btn btn-primary">Actualizar Recurso</button>
         </form>
         <br>
-        <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
+        <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
 
     </div>
 </body>
