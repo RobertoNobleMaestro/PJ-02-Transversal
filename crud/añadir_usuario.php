@@ -50,7 +50,9 @@ try {
             ?>
         </select><br><br>
 
-        <button type="submit" name="btn_crear_usuario">Añadir Usuario</button>
+        <button type="submit"  class="form-button" name="btn_crear_usuario">Añadir Usuario</button>
+        <br><br>
+        <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
     </form>
 </body>
 </html>
