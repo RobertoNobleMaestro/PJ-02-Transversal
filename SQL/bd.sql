@@ -90,16 +90,17 @@ INSERT INTO tbl_usuarios (nombre_user, nombre_real, ape_usuario, contrasena, rol
     ('Luis', 'Luis', 'Ramírez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 4, NULL);
 
 -- Insertar salas
-INSERT INTO tbl_salas (nombre_sala, tipo_sala) VALUES
-    ('Terraza 1', 'Terraza'),
-    ('Terraza 2', 'Terraza'),
-    ('Terraza 3', 'Terraza'),
-    ('Comedor 1', 'Comedor'),
-    ('Comedor 2', 'Comedor'),
-    ('Sala Privada 1', 'Privada'),
-    ('Sala Privada 2', 'Privada'),
-    ('Sala Privada 3', 'Privada'),
-    ('Sala Privada 4', 'Privada');
+INSERT INTO tbl_salas (nombre_sala, tipo_sala, imagen_sala) VALUES
+    ('Terraza 1', 'Terraza', 'terraza 1.jpg'),
+    ('Terraza 2', 'Terraza', 'terraza 2.jpg'),
+    ('Terraza 3', 'Terraza', 'terraza 3.jpg'),
+    ('Comedor 1', 'Comedor', 'comedor 1.jpg'),
+    ('Comedor 2', 'Comedor', 'comedor 2.jpg'),
+    ('Sala Privada 1', 'Privada', 'sala privada 1.jpg'),
+    ('Sala Privada 2', 'Privada', 'sala privada 2.jpg'),
+    ('Sala Privada 3', 'Privada', 'sala privada 3.jpg'),
+    ('Sala Privada 4', 'Privada', 'sala privada 4.jpg');
+
 
 -- Insertar mesas (relacionadas con salas existentes)
 INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES
