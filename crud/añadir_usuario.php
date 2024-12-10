@@ -57,7 +57,7 @@ try {
 
         <button type="submit"  class="form-button" name="btn_crear_usuario">Añadir Usuario</button>
         <br><br>
-        <a href="../menu-admin.php" class="cancelar-btn">Volver</a>
+        <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
     </form>
     </div>
     

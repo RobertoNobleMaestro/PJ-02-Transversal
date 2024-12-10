@@ -14,8 +14,7 @@ if (!isset($_GET['id_mesa']) || empty($_GET['id_mesa'])) {
     exit();
 }
 
-$id_mesa = $_GET['id_mesa'];
-
+$id_mesa = htmlspecialchars($_GET['id_mesa']);
 // Obtener los datos de la mesa y la sala asociada
 try {
     $sql_get_mesa = "

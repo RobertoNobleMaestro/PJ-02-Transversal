@@ -91,25 +91,25 @@ try {
 
             <!-- Campo para el nombre de la sala, editable -->
             <div class="mb-3">
-                <label for="nombre_sala" class="form-label">Nombre de la Sala</label>
+                <label for="nombre_sala">Nombre de la Sala</label>
                 <input type="text" class="form-control" id="nombre_sala" name="nombre_sala" value="<?php echo htmlspecialchars($nombre_sala); ?>" required>
             </div>
 
             <!-- Campo para el número de mesa -->
             <div class="mb-3">
-                <label for="numero_mesa" class="form-label">Número de Mesa</label>
+                <label for="numero_mesa">Número de Mesa</label>
                 <input type="number" class="form-control" id="numero_mesa" name="numero_mesa" value="<?php echo htmlspecialchars($numero_mesa); ?>" required>
             </div>
 
             <!-- Campo para el número de sillas -->
             <div class="mb-3">
-                <label for="numero_sillas" class="form-label">Número de Sillas</label>
+                <label for="numero_sillas">Número de Sillas</label>
                 <input type="number" class="form-control" id="numero_sillas" name="numero_sillas" value="<?php echo htmlspecialchars($numero_sillas); ?>" required>
             </div>
 
             <!-- Campo para el estado de la mesa -->
             <div class="mb-3">
-                <label for="estado" class="form-label">Estado</label>
+                <label for="estado">Estado</label>
                 <select class="form-control" id="estado" name="estado">
                     <option value="libre" <?php echo ($estado == 'libre') ? 'selected' : ''; ?>>Libre</option>
                     <option value="ocupada" <?php echo ($estado == 'ocupada') ? 'selected' : ''; ?>>Ocupada</option>
@@ -119,7 +119,8 @@ try {
             <!-- Botón para actualizar la mesa -->
             <button type="submit" class="btn btn-primary">Actualizar Recurso</button>
         </form>
-        <button type="button" class="btn btn-danger" onclick="window.history.back();">Volver</button>
+        <br>
+        <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
 
     </div>
 </body>
