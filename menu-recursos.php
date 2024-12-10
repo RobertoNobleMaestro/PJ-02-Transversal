@@ -179,7 +179,7 @@ try {
                     echo "<td class='btn-container'>";
                     // Modificamos las URLs para incluir el tipo de sala, nombre de la sala y el id de la mesa
                     echo "<a href='./crud-recursos/editar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-warning'>Editar</a>";
-                    echo "<a href='./crud-recursos/eliminar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-danger' onclick='return confirm(\"¿Estás seguro de eliminar esta mesa?\")'>Eliminar</a>";
+                    echo "<a href='./crud-recursos/eliminar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-danger'>Eliminar</a>";
                     echo "</td>";
 
                     echo "</tr>";

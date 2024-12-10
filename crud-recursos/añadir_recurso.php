@@ -83,7 +83,7 @@ try {
         <h1>Gestión de Recursos</h1>
         <form id="dynamicForm" method="POST" action="añadir.php">
     <label for="accion">Seleccionar Acción:</label>
-    <select id="accion" name="accion" onchange="updateForm()">
+    <select id="accion" name="accion" onchange="updateForm()" class="form-label">
         <option value="" selected disabled>Elige una acción</option>
         <option value="añadir_mesa">Añadir Mesa a una Sala</option>
         <option value="crear_sala">Crear Nueva Sala</option>
@@ -93,7 +93,7 @@ try {
     <div id="form_mesa" class="hidden form-section">
         <h2>Añadir Mesa a una Sala</h2>
         <label for="sala_mesa">Sala:</label>
-        <select id="sala_mesa" name="sala_mesa">
+        <select id="sala_mesa" name="sala_mesa" class="form-label">
             <option value="" disabled selected>Seleccionar Sala</option>
             <?php
             foreach ($salas as $sala) {
@@ -103,20 +103,20 @@ try {
         </select>
 
         <label for="numero_mesa">Número de la Mesa:</label>
-        <input type="number" id="numero_mesa" name="numero_mesa" min="1" required>
+        <input type="number" id="numero_mesa" name="numero_mesa" class="form-label">
 
         <label for="numero_sillas">Número de Sillas por Mesa:</label>
-        <input type="number" id="numero_sillas" name="numero_sillas" min="1" value="4">
+        <input type="number" id="numero_sillas" name="numero_sillas" value="4" class="form-label">
     </div>
 
     <!-- Sección para crear una nueva sala -->
     <div id="form_sala" class="hidden form-section">
         <h2>Crear Nueva Sala</h2>
         <label for="nombre_sala">Nombre de la Sala:</label>
-        <input type="text" id="nombre_sala" name="nombre_sala">
+        <input type="text" id="nombre_sala" name="nombre_sala" class="form-label">
 
         <label for="tipo_sala">Tipo de Sala:</label>
-        <select id="tipo_sala" name="tipo_sala">
+        <select id="tipo_sala" name="tipo_sala" class="form-label">
             <option value="" disabled selected>Selecciona un tipo</option>
             <option value="Terraza">Terraza</option>
             <option value="Comedor">Comedor</option>
@@ -124,14 +124,13 @@ try {
         </select>
 
         <label for="numero_mesas">Número de Mesas:</label>
-        <input type="number" id="numero_mesas" name="numero_mesas" min="1">
+        <input type="number" id="numero_mesas" name="numero_mesas" class="form-label">
     </div>
-
-    <button type="submit">Confirmar Acción</button>
-
-    <!-- Botón Volver -->
-    <button type="button" class="btn btn-danger" onclick="window.history.back();">Volver</button>
-</form>
+    <button class="btn btn-primary" type="submit">Confirmar Acción</button>
+    <br><br>
+    <!-- Botón Cancelar -->
+        <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
+    </form>
 
     </div>
 

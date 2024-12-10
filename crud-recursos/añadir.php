@@ -9,7 +9,6 @@ if (!isset($_SESSION['usuario'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = htmlspecialchars($_POST['accion']);
-
     try {
         if ($accion === 'añadir_mesa') {
             // Añadir mesas a una sala existente
