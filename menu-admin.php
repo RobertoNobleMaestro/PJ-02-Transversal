@@ -8,27 +8,48 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-// Verificar si el SweetAlert ya se mostró
-if (!isset($_SESSION['sweetalert_mostrado'])) {
-    $_SESSION['sweetalert_mostrado'] = false;
+// Obtener los filtros de la solicitud
+$nombre_usuario = isset($_POST['nombre_usuario']) ? $_POST['nombre_usuario'] : '';
+$rol_user = isset($_POST['rol_user']) ? $_POST['rol_user'] : '';
+
+// Crear la consulta base
+$sql = "
+SELECT 
+    u.id_usuario, 
+    u.nombre_user, 
+    u.nombre_real, 
+    u.ape_usuario, 
+    r.nombre_rol AS rol 
+FROM tbl_usuarios u
+INNER JOIN tbl_rol r ON u.rol_user = r.id_rol
+WHERE 1=1";
+
+// Agregar filtros si están presentes
+if ($nombre_usuario) {
+    // Modificamos la consulta para que el filtro de nombre de usuario sea más flexible
+    $sql .= " AND u.nombre_user LIKE :nombre_usuario";
 }
+if ($rol_user && $rol_user != 'todos') {
+    $sql .= " AND u.rol_user = :rol_user";
+}
+
 try {
-    // Prepara la consulta para seleccionar todos los usuarios
-    $sql = "
-    SELECT 
-        u.id_usuario, 
-        u.nombre_user, 
-        u.nombre_real, 
-        u.ape_usuario, 
-        u.telefono_usuario, 
-        r.nombre_rol AS rol, 
-        u.foto_usuario 
-    FROM tbl_usuarios u
-    INNER JOIN tbl_rol r ON u.rol_user = r.id_rol";    
     $stmt = $conexion->prepare($sql);
+    
+    // Vincular los parámetros de los filtros si están presentes
+    if ($nombre_usuario) {
+        // Agregar los comodines "%" para la búsqueda parcial
+        $nombre_usuario_like = '%' . $nombre_usuario . '%';
+        $stmt->bindParam(':nombre_usuario', $nombre_usuario_like, PDO::PARAM_STR);
+    }
+    if ($rol_user && $rol_user != 'todos') {
+        $stmt->bindParam(':rol_user', $rol_user, PDO::PARAM_INT);
+    }
+
+    // Ejecutar la consulta
     $stmt->execute();
 
-    // Fetch all rows as an associative array
+    // Obtener los usuarios filtrados
     $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
     echo "Error al obtener los usuarios: " . htmlspecialchars($e->getMessage());
@@ -36,7 +57,7 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,71 +68,80 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
+    <div class="container">
         <nav class="navegacion">
-            <!-- Sección izquierda con el logo grande y el ícono adicional más pequeño -->
             <div class="navbar-left">
-                <a href="./menu.php"><img src="./img/logo.png" alt="Logo de la Marca" class="logo" style="width: 100%;"></a>
-                <a href="./registro.php"><img src="./img/lbook.png" alt="Ícono adicional" class="navbar-icon"></a>
+                <a href="./menu-admin.php"><img src="./img/logo.png" alt="Logo de la Marca" class="logo" style="width: 100%;"></a>
+                <a href="./menu-recursos.php"><img src="./img/lbook.png" alt="Ícono adicional" class="navbar-icon"></a>
             </div>
-
-            <!-- Título en el centro -->
             <div class="navbar-title">
                 <h3>Lista de usuarios</h3>
             </div>
 
-            <!-- Icono de logout a la derecha -->
             <div class="navbar-right">
                 <a href="./php/salir.php"><img src="./img/logout.png" alt="Logout" class="navbar-icon"></a>
             </div>
         </nav>
-        <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre Usuario</th>
-                <th>Nombre Real</th>
-                <th>Apellido</th>
-                <th>Teléfono</th>
-                <th>Rol</th>
-                <th>Foto</th>
-                <th>Acciones</th> <!-- Nueva columna para las acciones -->
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if (!empty($usuarios)) {
-                for ($i = 0; $i < count($usuarios); $i++) {
-                    echo '<tr>';
-                    echo '<td>' . htmlspecialchars($usuarios[$i]['id_usuario']) . '</td>';
-                    echo '<td>' . htmlspecialchars($usuarios[$i]['nombre_user']) . '</td>';
-                    echo '<td>' . htmlspecialchars($usuarios[$i]['nombre_real']) . '</td>';
-                    echo '<td>' . htmlspecialchars($usuarios[$i]['ape_usuario']) . '</td>';
-                    echo '<td>' . htmlspecialchars($usuarios[$i]['telefono_usuario']) . '</td>';
-                    echo '<td>' . htmlspecialchars($usuarios[$i]['rol']) . '</td>'; // Nombre del rol
-                    echo '<td>';
-                    if (!empty($usuarios[$i]['foto_usuario'])) {
-                        echo '<img src="' . htmlspecialchars($usuarios[$i]['foto_usuario']) . '" alt="Foto" style="width:50px; height:50px;">';
-                    } else {
-                        echo 'Sin foto';
-                    }
-                    echo '</td>';
-                    // Columna de acciones con enlaces para editar y eliminar
-                    echo '<td>';
-                    echo '<a href="./crud/editar_usuario.php?id=' . urlencode($usuarios[$i]['id_usuario']) . '">Editar</a>';
-                    echo '<a href="./crud/eliminar_usuario.php?id=' . urlencode($usuarios[$i]['id_usuario']) . '">Eliminar</a>';
-                    echo '</td>';
-                    echo '</tr>';
-                }
-            } else {
-                echo '<tr>';
-                echo '<td colspan="8">No hay usuarios registrados</td>';
-                echo '</tr>';
-            }
-            ?>
-        </tbody>
-    </table>
+        <br>
+        
+        <!-- Formulario de filtros -->
+        <form method="POST" action="" class="mt-3">
+            <div class="d-flex flex-wrap align-items-center">
+                <div class="me-3 mb-3">
+                    <input type="text" name="nombre_usuario" class="form-control" placeholder="Nombre de usuario" value="<?php echo htmlspecialchars($nombre_usuario); ?>">    
+                </div>
+                <div class="me-3 mb-3">
+                <select name="rol_user" class="form-control">
+                    <option value="todos" <?php echo ($rol_user == 'todos') ? 'selected' : ''; ?>>Todos</option>
+                    <option value="1" <?php echo ($rol_user == '1') ? 'selected' : ''; ?>>Camarero</option>
+                    <option value="2" <?php echo ($rol_user == '2') ? 'selected' : ''; ?>>Administrador</option>
+                    <option value="3" <?php echo ($rol_user == '3') ? 'selected' : ''; ?>>Gerente</option>
+                    <option value="4" <?php echo ($rol_user == '4') ? 'selected' : ''; ?>>Personal de Mantenimiento</option>
+                </select>
+                </div>
+                <div class="me-3 mb-3">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href = window.location.pathname;">Borrar Filtros</button>    
+                </div>
+            </div>
+        </form>
 
-    </div> 
+        <div>
+            <button class="btn btn-primary" onclick="location.href='./crud/añadir_usuario.php'">Añadir Usuario</button>
+        </div>
+        <br>
+        
+        <table class="tabla">
+            <thead>
+                <tr>
+                    <th>Nombre Usuario</th>
+                    <th>Nombre Real</th>
+                    <th>Apellido</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if (!empty($usuarios)) {
+                    foreach ($usuarios as $usuario) {
+                        echo '<tr>';
+                        echo '<td>' . htmlspecialchars($usuario['nombre_user']) . '</td>';
+                        echo '<td>' . htmlspecialchars($usuario['nombre_real']) . '</td>';
+                        echo '<td>' . htmlspecialchars($usuario['ape_usuario']) . '</td>';
+                        echo '<td>' . htmlspecialchars($usuario['rol']) . '</td>';
+                        echo '<td class="btn-container">';
+                        echo '<a href="./crud/editar_usuario.php?id=' . urlencode($usuario['id_usuario']) . '" class="btn btn-warning">Editar</a>';
+                        echo '<a href="./crud/eliminar_usuario.php?id=' . urlencode($usuario['id_usuario']) . '" class="btn btn-danger">Eliminar</a>';
+                        echo '</td>';
+                        echo '</tr>';
+                    }
+                } else {
+                    echo '<tr><td colspan="5" class="text-center">No se encontraron usuarios.</td></tr>';
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

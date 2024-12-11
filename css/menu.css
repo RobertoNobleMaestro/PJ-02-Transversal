@@ -1,7 +1,7 @@
 html {
     font-family: "Roboto", serif;
+    font-weight: 400;
     font-style: normal;
-    font-weight: bold;
 }
 
 body {
@@ -32,7 +32,6 @@ body {
     height: 15vh;
     border-radius: 10px;
 }
-
 .navbar-left {
     display: flex;
     align-items: center;
@@ -208,15 +207,26 @@ section img:hover {
     background-color: #d32f2f;
 }
 table {
-    border-collapse: collapse;
     width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
 }
-table, th, td {
-    border: 1px solid black;
+.tabla-container {
+    margin-top: 20px;
 }
-th, td {
-    padding: 8px;
-    text-align: left;
+.titulos {
+    margin-top: 40px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.btn-container {
+    display: flex;
+    gap: 10px;
+justify-content: center;
 }
 a {
     text-decoration: none;
@@ -267,15 +277,19 @@ a {
         font-size: 20px;
     }
 
-    .table td, .table th {
+    .tabla td, .tabla th {
         padding: 8px;
         font-size: 12px;
         border: 1px solid #ddd;
+        align-items: center;
+        text-align: center;
+        background-color: white;
     }
-    .table thead th {
-        background-color: #A7A1A1;
+    .tabla thead th {
+        background-color: #000000;
         color: white;
         font-weight: bold;
+        border: 1px solid #ddd;
     }
 }
 
@@ -316,27 +330,24 @@ a {
         flex-wrap: wrap;
         justify-content: space-evenly;
     }
-    table{
-        color: black;
-        background-color: white;
-    }
+
     #titulo-historial {
         font-size: 30px;
         margin-top: 0;
     }
  
-    .table {
+    .tabla {
         border-collapse: collapse;
         width: 100%;
         margin: 0 auto; 
     }
-    .table th, .table td {
+    .tabla th, .tabla td {
         padding: 12px;
         text-align: center;
         border: 1px solid #ddd;
         font-size: 16px;
     }
-    .table thead th {
+    .tabla thead th {
         background-color: #A7A1A1;
         color: white;
         font-weight: bold;
