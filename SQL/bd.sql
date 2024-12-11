@@ -2,7 +2,6 @@ CREATE DATABASE bd_restaurante;
 
 USE bd_restaurante;
 
-
 -- Crear la tabla de usuarios
 CREATE TABLE tbl_usuarios (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
@@ -10,8 +9,7 @@ CREATE TABLE tbl_usuarios (
     nombre_real VARCHAR(30) NOT NULL,
     ape_usuario VARCHAR(30) NOT NULL,
     contrasena VARCHAR(100),
-    rol_user INT NOT NULL,
-    foto_usuario VARCHAR(255) NULL
+    rol_user INT NOT NULL
 );
 
 -- Crear la tabla de roles
@@ -37,22 +35,14 @@ CREATE TABLE tbl_mesas (
     estado ENUM('libre', 'ocupada') DEFAULT 'libre'
 );
 
--- Crear la tabla para los registros de ocupación de las mesas
-CREATE TABLE tbl_ocupaciones (
-    id_ocupacion INT PRIMARY KEY AUTO_INCREMENT,
-    id_usuario INT,
-    id_mesa INT,
-    fecha_inicio DATETIME DEFAULT CURRENT_TIMESTAMP,    -- Fecha y hora del inicio de la ocupación
-    fecha_fin DATETIME                                  -- Fecha y hora del final de la ocupación
-);
-
--- Crear la nueva tabla: Reservas de recursos (por ejemplo, camareros en un horario específico)
-CREATE TABLE tbl_reservas_recursos (
+-- Crear la nueva tabla de reservas (reemplazo de tbl_reservas_recursos)
+CREATE TABLE tbl_reservas (
     id_reserva INT PRIMARY KEY AUTO_INCREMENT,  -- Cambié el nombre de la columna a id_reserva
-    fecha_reserva DATE NOT NULL,                -- Fecha de la reserva
-    hora_inicio TIME NOT NULL,                  -- Hora de inicio de la reserva
-    hora_fin TIME NOT NULL,                     -- Hora de finalización de la reserva
-    id_mesa INT NOT NULL                     -- ID del recurso(mesa)
+    fecha_reserva DATE NOT NULL,
+    hora_inicio TIME NOT NULL,                   -- Hora de inicio de la reserva
+    hora_fin TIME NOT NULL,                      -- Hora de finalización de la reserva
+    id_mesa INT NOT NULL,                        -- ID de la mesa
+    id_usuario INT NOT NULL                      -- ID del usuario que hace la reserva
 );
 
 -- Agregar las claves foráneas después de crear las tablas
@@ -64,15 +54,12 @@ ADD CONSTRAINT fk_rol_usuario FOREIGN KEY (rol_user) REFERENCES tbl_rol(id_rol);
 -- Agregar la clave foránea en la tabla tbl_mesas
 ALTER TABLE tbl_mesas
 ADD CONSTRAINT fk_mesas_salas FOREIGN KEY (id_sala) REFERENCES tbl_salas(id_sala);
--- Agregar las claves foráneas en la tabla tbl_ocupaciones
-ALTER TABLE tbl_ocupaciones
-ADD CONSTRAINT fk_ocupaciones_usuarios FOREIGN KEY (id_usuario) REFERENCES tbl_usuarios(id_usuario),
-ADD CONSTRAINT fk_ocupaciones_mesas FOREIGN KEY (id_mesa) REFERENCES tbl_mesas(id_mesa);
 
-ALTER TABLE tbl_reservas_recursos
-ADD CONSTRAINT fk_reservas_mesas FOREIGN KEY (id_mesa) REFERENCES tbl_mesas(id_mesa);
+-- Agregar las claves foráneas en la tabla tbl_reservas
+ALTER TABLE tbl_reservas
+ADD CONSTRAINT fk_reservas_mesas FOREIGN KEY (id_mesa) REFERENCES tbl_mesas(id_mesa),
+ADD CONSTRAINT fk_reservas_usuarios FOREIGN KEY (id_usuario) REFERENCES tbl_usuarios(id_usuario);
 
--- Insertar roles
 -- Insertar roles
 INSERT INTO tbl_rol (nombre_rol) VALUES
     ('Camarero'),
@@ -81,13 +68,12 @@ INSERT INTO tbl_rol (nombre_rol) VALUES
     ('Personal de Mantenimiento');
 
 -- Insertar usuarios (camareros) adaptados (sin id_usuario porque es AUTO_INCREMENT)
-INSERT INTO tbl_usuarios (nombre_user, nombre_real, ape_usuario, contrasena, rol_user, foto_usuario) VALUES
-
-    ('Jorge', 'Jorge', 'López', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa',2, NULL),
-    ('Olga', 'Olga', 'Gómez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1, NULL),
-    ('Miguel', 'Miguel', 'Pérez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1, NULL),
-    ('Ana', 'Ana', 'Martínez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 3, NULL),
-    ('Luis', 'Luis', 'Ramírez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 4, NULL);
+INSERT INTO tbl_usuarios (nombre_user, nombre_real, ape_usuario, contrasena, rol_user) VALUES
+    ('Jorge', 'Jorge', 'López', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 2),
+    ('Olga', 'Olga', 'Gómez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1),
+    ('Miguel', 'Miguel', 'Pérez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1),
+    ('Ana', 'Ana', 'Martínez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 3),
+    ('Luis', 'Luis', 'Ramírez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 4);
 
 -- Insertar salas
 INSERT INTO tbl_salas (nombre_sala, tipo_sala, imagen_sala) VALUES
@@ -100,7 +86,6 @@ INSERT INTO tbl_salas (nombre_sala, tipo_sala, imagen_sala) VALUES
     ('Sala Privada 2', 'Privada', 'sala privada 2.jpg'),
     ('Sala Privada 3', 'Privada', 'sala privada 3.jpg'),
     ('Sala Privada 4', 'Privada', 'sala privada 4.jpg');
-
 
 -- Insertar mesas (relacionadas con salas existentes)
 INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES
@@ -146,17 +131,3 @@ INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES
     -- Mesas Sala Privada 4
     (902, 9, 18, 'libre'),
     (903, 9, 14, 'libre');
-
--- Insertar ocupaciones
-INSERT INTO tbl_ocupaciones (id_usuario, id_mesa, fecha_inicio, fecha_fin) VALUES
-    (1, 1, '2024-12-02 12:30:00', '2024-12-02 14:30:00'),
-    (2, 4, '2024-12-02 18:00:00', '2024-12-02 19:30:00'),
-    (3, 6, '2024-12-02 20:00:00', '2024-12-02 22:00:00'),
-    (4, 7, '2024-12-03 12:00:00', '2024-12-03 14:00:00');
-
-
--- Insertar más mesas en terrazas y salas privadas
-INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES
-    (902, 9, 20, 'libre'), 
-    (303, 3, 4, 'ocupada');
-
