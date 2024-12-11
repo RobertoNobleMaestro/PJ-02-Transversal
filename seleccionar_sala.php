@@ -84,9 +84,8 @@ if (!isset($_SESSION['usuario'])) {
                         $result_sillas_libres = $stmt_sillas_libres->fetch(PDO::FETCH_ASSOC);
                         $sillas_libres = $result_sillas_libres['total_sillas_libres'];
 
-                        // Mostrar la información de la sala con las sillas libres
                         echo "<a class='image-container' href='./gestionar_mesas.php?categoria=" . urlencode($categoria_seleccionada) . "&id_sala=" . $id_sala . "'>
-                            <img src='./img/" . htmlspecialchars($sala['nombre_sala']) . ".jpg' alt='' id='terraza'>
+                            <img src='./img/" . htmlspecialchars($sala['imagen_sala']) . "' alt='' id='terraza'>
                             <div class='text-overlay'>" . htmlspecialchars($sala['nombre_sala']) . "<br>Sillas libres: " . ($sillas_libres ?? 0) . "/" . ($total_sillas ?? 0)  . "</div>
                         </a>";
                     }

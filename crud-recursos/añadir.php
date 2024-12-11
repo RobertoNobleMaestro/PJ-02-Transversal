@@ -81,8 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($accion === 'añadir_mesa') {
             // Añadir mesas a una sala existente
             $id_sala = htmlspecialchars($_POST['sala_mesa']);
-            $numero_mesas = htmlspecialchars($_POST['numero_mesas']);
-            $sillas_por_mesa = htmlspecialchars($_POST['sillas_por_mesa'] ?? 4);
+            $numero_mesas = htmlspecialchars($_POST['numero_mesa']);
+            $sillas_por_mesa = htmlspecialchars($_POST['numero_sillas'] ?? 4);
 
             if (!empty($id_sala) && !empty($numero_mesas)) {
                 // Obtener el último número de mesa de la sala seleccionada

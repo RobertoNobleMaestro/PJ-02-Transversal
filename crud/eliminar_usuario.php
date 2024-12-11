@@ -31,8 +31,8 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $conexion->beginTransaction();
 
-            // Eliminar datos relacionados en tbl_reservas_recursos
-            $sql_reservas_recursos = "DELETE FROM tbl_reservas_recursos WHERE id_usuario = :id_usuario";
+            // Eliminar datos relacionados en tbl_reservas
+            $sql_reservas_recursos = "DELETE FROM tbl_reservas WHERE id_usuario = :id_usuario";
             $stmt_reservas_recursos = $conexion->prepare($sql_reservas_recursos);
             $stmt_reservas_recursos->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
 

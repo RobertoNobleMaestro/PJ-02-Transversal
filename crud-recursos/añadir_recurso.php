@@ -53,7 +53,7 @@ try {
                     ?>
                 </select>
 
-                <label for="numero_mesa">Número de la Mesa:</label>
+                <label for="numero_mesa">Número de mesas que quieres agregar:</label>
                 <input type="number" id="numero_mesa" name="numero_mesa" class="form-label">
 
                 <label for="numero_sillas">Número de Sillas por Mesa:</label>
