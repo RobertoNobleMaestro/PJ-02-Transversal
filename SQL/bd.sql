@@ -38,7 +38,7 @@ CREATE TABLE tbl_mesas (
 -- Crear la nueva tabla de reservas (reemplazo de tbl_reservas_recursos)
 CREATE TABLE tbl_reservas (
     id_reserva INT PRIMARY KEY AUTO_INCREMENT,  -- Cambié el nombre de la columna a id_reserva
-    fecha_reserva DATE NOT NULL,                 -- Fecha de la reserva
+    fecha_reserva DATE NOT NULL,
     hora_inicio TIME NOT NULL,                   -- Hora de inicio de la reserva
     hora_fin TIME NOT NULL,                      -- Hora de finalización de la reserva
     id_mesa INT NOT NULL,                        -- ID de la mesa
@@ -131,9 +131,3 @@ INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES
     -- Mesas Sala Privada 4
     (902, 9, 18, 'libre'),
     (903, 9, 14, 'libre');
-
--- Insertar reservas (relacionadas con mesas y usuarios)
-INSERT INTO tbl_reservas (fecha_reserva, hora_inicio, hora_fin, id_mesa, id_usuario) VALUES
-    ('2024-12-11', '12:00:00', '14:00:00', 101, 1),
-    ('2024-12-11', '19:00:00', '22:00:00', 202, 2),
-    ('2024-12-12', '12:00:00', '14:00:00', 303, 3);
