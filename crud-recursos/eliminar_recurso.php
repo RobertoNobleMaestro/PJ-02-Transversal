@@ -2,19 +2,19 @@
 require_once('../php/conexion.php');
 session_start();
 
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "2") {
     header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }
 
 // Verificar si el ID de la mesa fue proporcionado
 if (!isset($_GET['id_mesa']) || empty($_GET['id_mesa'])) {
-    echo "ID de la mesa no especificado.";
+    header("Location: ../menu-recursos.php?error=mesa_no_select");
     exit();
+} else {
+    $id_mesa = htmlspecialchars($_GET['id_mesa']);
 }
 
-$id_mesa = htmlspecialchars($_GET['id_mesa']);
 // Obtener los datos de la mesa y la sala asociada
 try {
     $sql_get_mesa = "

@@ -2,9 +2,8 @@
 session_start();
 require_once('../php/conexion.php');
 
-// Verificar sesión iniciada
-if (!isset($_SESSION['usuario'])) {
-    header("Location: index.php?error=sesion_no_iniciada");
+if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "1") {
+    header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }
 
@@ -24,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $reservaDateTime = new DateTime("$fecha_reserva $fecha_inicio");
 
         if ($reservaDateTime < $currentDateTime) {
-            header("Location: gestionar.php?error=fecha_pasada&&");
+            header("Location: ../gestionar_mesa.php?error=fecha_pasada&id_sala=" . urlencode($id_sala));
             exit();
         }
 

@@ -2,8 +2,7 @@
 session_start();
 require_once('./php/conexion.php');
 
-// Verificar si la variable de sesión 'Usuario' está configurada
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "1") {
     header("Location: index.php?error=sesion_no_iniciada");
     exit();
 }

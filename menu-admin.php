@@ -3,10 +3,11 @@ session_start();
 require_once('./php/conexion.php');
 
 // Verificar si la variable de sesión 'Usuario' está configurada
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "2") {
     header("Location: index.php?error=sesion_no_iniciada");
     exit();
 }
+
 
 // Obtener los filtros de la solicitud
 $nombre_usuario = isset($_POST['nombre_usuario']) ? $_POST['nombre_usuario'] : '';

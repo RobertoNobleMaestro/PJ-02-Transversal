@@ -45,7 +45,6 @@ CREATE TABLE tbl_reservas (
     id_turno INT NOT NULL                        -- Agregar la columna id_turno                  -- ID del usuario que hace la reserva
 );
 
-);
 CREATE TABLE tbl_turnos (
     id_turno INT AUTO_INCREMENT PRIMARY KEY,
     nombre_turno VARCHAR(50) NOT NULL,        -- Ejemplo: "Mediodía", "Noche"

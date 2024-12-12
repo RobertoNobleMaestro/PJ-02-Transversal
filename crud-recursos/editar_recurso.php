@@ -2,15 +2,14 @@
 require_once('../php/conexion.php');
 session_start();
 
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['usuario'])) {
+
+if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "2") {
     header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }
 
 // Obtener los parámetros de la URL
-$id_mesa = $_GET['id_mesa'];
-
+$id_mesa = htmlspecialchars($_GET['id_mesa']);
 // Inicializar variables para los datos de la mesa
 $numero_mesa = $numero_sillas = $estado = "";
 $tipo_sala = $nombre_sala = $imagen_sala = "";

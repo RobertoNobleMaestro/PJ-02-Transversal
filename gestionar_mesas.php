@@ -3,8 +3,7 @@ session_start();
 date_default_timezone_set('Europe/Madrid');
 require_once('./php/conexion.php');
 
-// Verificación de sesión iniciada
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "1") {
     header("Location: index.php?error=sesion_no_iniciada");
     exit();
 }
