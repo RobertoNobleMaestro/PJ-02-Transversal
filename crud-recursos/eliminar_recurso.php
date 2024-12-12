@@ -18,7 +18,7 @@ $id_mesa = htmlspecialchars($_GET['id_mesa']);
 // Obtener los datos de la mesa y la sala asociada
 try {
     $sql_get_mesa = "
-        SELECT m.numero_mesa, m.numero_sillas, m.estado, s.id_sala, s.nombre_sala
+        SELECT m.numero_mesa, m.numero_sillas, s.id_sala, s.nombre_sala
         FROM tbl_mesas m
         JOIN tbl_salas s ON m.id_sala = s.id_sala
         WHERE m.id_mesa = :id_mesa

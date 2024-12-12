@@ -15,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nombre_sala = htmlspecialchars($_POST['nombre_sala']);
     $numero_mesa = htmlspecialchars($_POST['numero_mesa']);
     $numero_sillas = htmlspecialchars($_POST['numero_sillas']);
-    $estado = htmlspecialchars($_POST['estado']);
     $id_sala = htmlspecialchars($_POST['id_sala']);
 
     try {
@@ -61,13 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             SET 
                 numero_mesa = :numero_mesa,
                 numero_sillas = :numero_sillas,
-                estado = :estado
             WHERE id_mesa = :id_mesa
         ";
         $stmt_update_mesa = $conexion->prepare($sql_update_mesa);
         $stmt_update_mesa->bindParam(':numero_mesa', $numero_mesa, PDO::PARAM_INT);
         $stmt_update_mesa->bindParam(':numero_sillas', $numero_sillas, PDO::PARAM_INT);
-        $stmt_update_mesa->bindParam(':estado', $estado, PDO::PARAM_STR);
         $stmt_update_mesa->bindParam(':id_mesa', $id_mesa, PDO::PARAM_INT);
         $stmt_update_mesa->execute();
 

@@ -45,8 +45,36 @@ label {
     padding: 2%;
     border-radius: 10px;
     border: none;
+    transition: 0.5s;
     cursor: pointer;
 }
+.form-button:hover {
+    background-color: #1A1A1A; /* Un tono más oscuro para el hover */
+    transition: 0.5s;
+    transform: scale(1.02);    /* Aumentar ligeramente el tamaño al pasar el mouse */
+}
+.cancelar-btn {
+    text-align: center;
+    width: 100%;
+    background-color: #B22222; /* Rojo oscuro para destacar como cancelar */
+    color: white;
+    padding: 2%;
+    border-radius: 10px;
+    border: none;
+    transition: 0.5s;
+    cursor: pointer;
+    text-decoration: none; /* Para evitar subrayado si es un enlace */
+}
+.text-mid{
+    text-align: center;
+    width: 100%;
+}
+.cancelar-btn:hover {
+    background-color: #8B0000; /* Un rojo más oscuro para el hover */
+    transition: 0.5s;
+    color: #ffffff; /* Asegurar que el texto se mantenga visible */
+}
+
 .hidden {
     display: none;
 }

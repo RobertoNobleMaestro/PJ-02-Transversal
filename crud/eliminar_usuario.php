@@ -41,7 +41,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             }
 
             // Eliminar datos relacionados en tbl_reservas
-            $sql_reservas = "DELETE FROM tbl_ocupaciones WHERE id_usuario = :id_usuario";
+            $sql_reservas = "DELETE FROM tbl_reservas WHERE id_usuario = :id_usuario";
             $stmt_reservas = $conexion->prepare($sql_reservas);
             $stmt_reservas->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
 
@@ -90,12 +90,14 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 <body>
     <div class="container-form">
         <h1>Eliminar Usuario</h1>
-        <p>¿Estás seguro de que deseas eliminar al usuario <strong><?php echo htmlspecialchars($usuario['nombre_user']); ?></strong>?</p>
+        <p style="text-align: center;">¿Estás seguro de que deseas eliminar al usuario <strong><?php echo htmlspecialchars($usuario['nombre_user']); ?></strong>?</p>
         <form action="eliminar_usuario.php?id=<?php echo $id_usuario; ?>" method="post">
             <button type="submit" name="confirmar_eliminar"  class="form-button">Confirmar Eliminación</button>
             <br><br>
-            <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
         </form>
+        <div class="text-mid">
+            <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
+        </div>
     </div>
 </body>
 </html>

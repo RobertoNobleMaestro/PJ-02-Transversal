@@ -12,12 +12,7 @@ try {
     // Obtener los filtros de los parámetros GET
     $usuario_filter = isset($_GET['usuario']) ? $_GET['usuario'] : '';
     $sala_filter = isset($_GET['sala']) ? $_GET['sala'] : '';
-    $estado_filter = isset($_GET['estado']) ? $_GET['estado'] : '';
-
-    // Asegúrate de limpiar el valor de estado, eliminando espacios adicionales
-    if ($estado_filter) {
-        $estado_filter = urldecode($estado_filter);  // Decodificar cualquier URL codificada
-    }
+    $tipo_sala_filter = isset($_GET['tipo_sala']) ? $_GET['tipo_sala'] : '';
 
     // Construir la consulta con los filtros aplicados
     $sql = "
@@ -27,8 +22,7 @@ try {
             s.tipo_sala,
             m.id_mesa,
             m.numero_mesa,
-            s.imagen_sala,  -- Aquí hemos agregado la columna de la imagen de la sala
-            m.estado,
+            s.imagen_sala,
             m.numero_sillas
         FROM 
             tbl_salas s
@@ -43,8 +37,8 @@ try {
     if ($sala_filter) {
         $sql .= " AND s.id_sala = :sala";
     }
-    if ($estado_filter) {
-        $sql .= " AND m.estado = :estado";
+    if ($tipo_sala_filter) {
+        $sql .= " AND s.tipo_sala = :tipo_sala";
     }
 
     // Ordenar los resultados
@@ -60,11 +54,10 @@ try {
     if ($sala_filter) {
         $stmt->bindParam(':sala', $sala_filter, PDO::PARAM_INT);
     }
-    if ($estado_filter) {
-        $stmt->bindParam(':estado', $estado_filter, PDO::PARAM_STR);
+    if ($tipo_sala_filter) {
+        $stmt->bindParam(':tipo_sala', $tipo_sala_filter, PDO::PARAM_STR);
     }
 
-    // Ejecutar la consulta
     $stmt->execute();
 
     // Agrupar los resultados por tipo de sala y nombre de sala
@@ -72,6 +65,11 @@ try {
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $salas[$row['tipo_sala']][$row['nombre_sala']][] = $row;
     }
+
+    // Obtener tipos de sala únicos para el filtro
+    $query_tipos = "SELECT DISTINCT tipo_sala FROM tbl_salas";
+    $stmt_tipos = $conexion->query($query_tipos);
+    $tipos_sala = $stmt_tipos->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
     echo "Error al obtener los datos: " . htmlspecialchars($e->getMessage());
     die();
@@ -108,13 +106,13 @@ try {
         <!-- Formulario de Filtros -->
         <form method="GET" action="menu-recursos.php" class="mt-3">
             <div class="d-flex flex-wrap align-items-center">
+                <!-- Filtro por Sala -->
                 <div class="me-3 mb-3">
                     <label for="sala" class="text-white">Sala:</label>
                     <select name="sala" class="form-control form-control-sm" style="height: 40px; width: 200px;">
                         <option value="">Todas</option>
                         <?php
-                        // Consulta para salas
-                        $query_salas = "SELECT id_sala, nombre_sala, imagen_sala FROM tbl_salas";
+                        $query_salas = "SELECT id_sala, nombre_sala FROM tbl_salas";
                         $stmt_salas = $conexion->query($query_salas);
                         while ($sala = $stmt_salas->fetch(PDO::FETCH_ASSOC)) {
                             $selected = isset($_GET['sala']) && $_GET['sala'] == $sala['id_sala'] ? 'selected' : '';
@@ -124,80 +122,60 @@ try {
                     </select>
                 </div>
 
+                <!-- Filtro por Tipo de Sala -->
                 <div class="me-3 mb-3">
-                    <label for="estado" class="text-white">Estado Sala:</label>
-                    <select name="estado" class="form-control form-control-sm" style="height: 40px; width: 200px;">
+                    <label for="tipo_sala" class="text-white">Tipo de Sala:</label>
+                    <select name="tipo_sala" class="form-control form-control-sm" style="height: 40px; width: 200px;">
                         <option value="">Todos</option>
-                        <option value="libre" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'libre') ? 'selected' : ''; ?>>Libre</option>
-                        <option value="ocupada" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'ocupada') ? 'selected' : ''; ?>>Ocupada</option>
+                        <?php
+                        foreach ($tipos_sala as $tipo) {
+                            $selected = isset($_GET['tipo_sala']) && $_GET['tipo_sala'] == $tipo['tipo_sala'] ? 'selected' : '';
+                            echo "<option value='" . htmlspecialchars($tipo['tipo_sala']) . "' $selected>" . htmlspecialchars($tipo['tipo_sala']) . "</option>";
+                        }
+                        ?>
                     </select>
                 </div>
 
+                <!-- Botones -->
                 <div class="me-3 mb-3">
                     <button type="submit" class="btn btn-primary btn-sm" style="height: 40px; width: 200px; margin-top: 25px;">Filtrar</button>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='menu-recursos.php'" style="height: 40px; width: 200px; margin-left: 7px;margin-top: 25px;">Borrar Filtros</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='menu-recursos.php'" style="height: 40px; width: 200px; margin-left: 7px; margin-top: 25px;">Borrar Filtros</button>
                 </div>
             </div>
         </form>
-        
+
         <br>
         <button class="btn btn-primary" onclick="location.href='./crud-recursos/añadir_recurso.php'">Añadir recurso</button>
 
         <br>
         <?php
-        // Recorrer los tipos de salas
         foreach ($salas as $tipo_sala => $salas_tipo) {
-            // Imprimir una tabla para cada tipo de sala
             echo "<div class='tabla-container'>";
-            echo "<h2 class='titulos'>" . htmlspecialchars($tipo_sala) . "</h2>";  // Título del tipo de sala
+            echo "<h2 class='titulos'>" . htmlspecialchars($tipo_sala) . "</h2>";
 
-            // Iniciar la tabla para este tipo de sala
             echo "<table class='tabla'>";
-            
-            // Mostrar encabezados de la tabla solo una vez por cada tipo de sala
-            echo "<thead>";
-            echo "<tr>";
-            echo "<th>Nombre de la Sala</th>";
-            echo "<th>Imagen de la sala</th>";
-            echo "<th>Número de Mesa</th>";
-            echo "<th>Estado</th>";
-            echo "<th>Número de Sillas</th>";
-            echo "<th>Acciones</th>";
-            echo "</tr>";
-            echo "</thead>";
-            
-            // Recorrer las salas de este tipo
+            echo "<thead><tr><th>Nombre de la Sala</th><th>Imagen de la sala</th><th>Número de Mesa</th><th>Número de Sillas</th><th>Acciones</th></tr></thead>";
             echo "<tbody>";
+
             foreach ($salas_tipo as $nombre_sala => $mesas_sala) {
-                // Mostrar las mesas dentro de cada sala
                 foreach ($mesas_sala as $index => $mesa) {
-                    // Si es la primera mesa, mostrar la información de la sala (nombre e imagen) una sola vez
                     if ($index === 0) {
-                        echo "<tr>";
-                        echo "<td rowspan='" . count($mesas_sala) . "'>" . htmlspecialchars($nombre_sala) . "</td>";
-                        echo "<td rowspan='" . count($mesas_sala) . "'>";
-                        echo "<img src='./img/" . htmlspecialchars($mesa['imagen_sala']) . "' alt='Imagen de la sala' style='width: 150px; object-fit: cover;'>";
-                        echo "</td>";
+                        echo "<tr><td rowspan='" . count($mesas_sala) . "'>" . htmlspecialchars($nombre_sala) . "</td>";
+                        echo "<td rowspan='" . count($mesas_sala) . "'><img src='./img/" . htmlspecialchars($mesa['imagen_sala']) . "' alt='Imagen de la sala' style='width: 150px; object-fit: cover;'></td>";
                     }
 
-                    // Mostrar información de la mesa
                     echo "<td>" . htmlspecialchars($mesa['numero_mesa']) . "</td>";
-                    echo "<td>" . htmlspecialchars($mesa['estado']) . "</td>";
                     echo "<td>" . htmlspecialchars($mesa['numero_sillas']) . "</td>";
-
-                    // Botones para editar y eliminar
                     echo "<td class='btn-container'>";
-                    echo "<a href='./crud-recursos/editar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-warning'>Editar</a>";
-                    echo "<a href='./crud-recursos/eliminar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "&tipo_sala=" . urlencode($mesa['tipo_sala']) . "&nombre_sala=" . urlencode($mesa['nombre_sala']) . "' class='btn btn-danger'>Eliminar</a>";
-                    echo "</td>";
-                    echo "</tr>";
+                    echo "<a href='./crud-recursos/editar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "' class='btn btn-warning'>Editar</a>";
+                    echo "<a href='./crud-recursos/eliminar_recurso.php?id_mesa=" . $mesa['id_mesa'] . "' class='btn btn-danger'>Eliminar</a>";
+                    echo "</td></tr>";
                 }
             }
-            echo "</tbody>";
-            echo "</table>";
-            echo "</div>";  // Fin del contenedor de la tabla
+            echo "</tbody></table></div>";
         }
         ?>
     </div>
 </body>
 </html>
+   

@@ -102,18 +102,10 @@ if (!isset($_SESSION['usuario'])) {
                         </select>
                     </div>
 
-                    <div class="me-3">
-                        <label for="estado" class="text-white">Estado Sala:</label>
-                        <select name="estado" class="form-control form-control-sm" style="height: 40px; width: 200px;">
-                            <option value="">Todos</option>
-                            <option value="libre" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'libre') ? 'selected' : ''; ?>>Libre</option>
-                            <option value="ocupada" <?php echo (isset($_GET['estado']) && $_GET['estado'] == 'ocupada') ? 'selected' : ''; ?>>Ocupada</option>
-                        </select>
-                    </div>
-
                     <div class="d-flex align-items-center mt-3">
-                        <button type="submit" class="btn btn-primary btn-sm me-2" style="height: 40px; width: 200px; margin-top: 10px;">Filtrar</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='registro.php'" style="height: 40px; width: 200px; margin-left: 7px;">Borrar Filtros</button>
+                        <button type="submit" class="btn btn-primary btn-sm me-2" style="height: 40px; width: 200px; margin-top: 9px;">Filtrar</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="window.location.href='registro.php'" style="height: 40px; width: 200px; margin-left: 7px; margin-top: 9px;">Borrar Filtros</button>
+
                     </div>
                 </div>
             </div>
@@ -124,15 +116,12 @@ if (!isset($_SESSION['usuario'])) {
         $usuario_filter = isset($_GET['usuario']) && !empty($_GET['usuario']) ? $_GET['usuario'] : '';
         $sala_filter = isset($_GET['sala']) && !empty($_GET['sala']) ? $_GET['sala'] : '';
         $mesa_filter = isset($_GET['mesa']) && !empty($_GET['mesa']) ? $_GET['mesa'] : '';
-        $estado_filter = isset($_GET['estado']) && !empty($_GET['estado']) ? $_GET['estado'] : '';
         ?>
 
         <?php
         // Consulta SQL con filtros
-        $query_historial = "SELECT u.nombre_user, s.nombre_sala, m.numero_mesa, m.estado, 
-                                       o.fecha_inicio, o.fecha_fin, 
-                                       TIMESTAMPDIFF(MINUTE, o.fecha_inicio, o.fecha_fin) AS duracion
-                            FROM tbl_ocupaciones o
+        $query_historial = "SELECT u.nombre_user, s.nombre_sala, m.numero_mesa, o.fecha_inicio, o.fecha_fin, o.fecha_reserva
+                            FROM tbl_reservas o
                             JOIN tbl_mesas m ON o.id_mesa = m.id_mesa
                             JOIN tbl_salas s ON m.id_sala = s.id_sala
                             JOIN tbl_usuarios u ON o.id_usuario = u.id_usuario";
@@ -147,10 +136,6 @@ if (!isset($_SESSION['usuario'])) {
         if ($mesa_filter) {
             $filters[] = "m.id_mesa = :mesa";
         }
-        if ($estado_filter) {
-            $filters[] = "m.estado = :estado";
-        }
-
         if (!empty($filters)) {
             $query_historial .= " WHERE " . implode(" AND ", $filters);
         }
@@ -168,9 +153,6 @@ if (!isset($_SESSION['usuario'])) {
         if ($mesa_filter) {
             $stmt_historial->bindParam(':mesa', $mesa_filter, PDO::PARAM_INT);
         }
-        if ($estado_filter) {
-            $stmt_historial->bindParam(':estado', $estado_filter, PDO::PARAM_STR);
-        }
 
         // Ejecutar la consulta
         $stmt_historial->execute();
@@ -184,10 +166,9 @@ if (!isset($_SESSION['usuario'])) {
                         <th>Usuario</th>
                         <th>Sala</th>
                         <th>Número de Mesa</th>
-                        <th>Estado</th>
-                        <th>Fecha Inicio</th>
-                        <th>Fecha Fin</th>
-                        <th>Duración (minutos)</th>
+                        <th>Fecha de la reserva</th>
+                        <th>Hora inicio de la reserva</th>
+                        <th>Hora fin de la reserva</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -197,10 +178,9 @@ if (!isset($_SESSION['usuario'])) {
                         <td>{$ocupacion['nombre_user']}</td>
                         <td>{$ocupacion['nombre_sala']}</td>
                         <td>{$ocupacion['numero_mesa']}</td>
-                        <td>{$ocupacion['estado']}</td>
+                        <td>{$ocupacion['fecha_reserva']}</td>
                         <td>{$ocupacion['fecha_inicio']}</td>
                         <td>{$ocupacion['fecha_fin']}</td>
-                        <td>{$ocupacion['duracion']}</td>
                     </tr>";
                     }
                     ?>

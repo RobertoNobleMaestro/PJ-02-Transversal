@@ -11,10 +11,7 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-// Verificar si el SweetAlert ya se mostró
-if (!isset($_SESSION['sweetalert_mostrado'])) {
-    $_SESSION['sweetalert_mostrado'] = false;
-}
+
 $id_usuario = htmlspecialchars($_GET['id']);
 
 try {
@@ -86,10 +83,12 @@ try {
                 </option>
             <?php } ?>
         </select><br><br>
-        <button type="submit" name="btn_actualizar"class="form-button">Actualizar Usuario</button>
+        <button type="submit" name="btn_actualizar" class="form-button">Actualizar Usuario</button>
         <br><br>
-        <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
     </form>
+    <div class="text-mid">
+        <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
+    </div>
     </div>
 
 </body>
