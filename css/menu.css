@@ -196,6 +196,13 @@ section img:hover {
     color: #fff;
     background-color: #4CAF50;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+.btn-estado:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .btn-estado:disabled {

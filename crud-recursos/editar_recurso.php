@@ -120,10 +120,12 @@ try {
             </div>
 
             <!-- Botón para actualizar la mesa -->
-            <button type="submit" class="btn btn-primary">Actualizar Recurso</button>
+            <button type="submit" class="form-button">Actualizar Recurso</button>
         </form>
         <br>
-        <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
+        <div class="text-mid">
+            <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
+        </div>       
     </div>
 </body>
 </html>

@@ -68,10 +68,12 @@ try {
                     <option value="si">Sí</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <button type="submit" class="form-button">Eliminar</button>
         </form>
         <br>
-        <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
+        <div class="text-mid">
+            <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
+        </div>    
     </div>
 </body>
 </html>

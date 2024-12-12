@@ -52,8 +52,7 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
-<body data-usuario="<?php echo htmlspecialchars($_SESSION['Usuario'], ENT_QUOTES, 'UTF-8'); ?>" data-sweetalert="<?php echo $_SESSION['sweetalert_mostrado'] ? 'true' : 'false'; ?>" data-mesa-sweetalert="<?php echo isset($_SESSION['mesa_sweetalert']) && $_SESSION['mesa_sweetalert'] ? 'true' : 'false'; ?>">
-    <div class="container">
+<body data-usuario="<?php echo htmlspecialchars($_SESSION['usuario']); ?>" data-sweetalert="<?php echo $_SESSION['sweetalert_mostrado'] ? 'true' : 'false'; ?>" data-mesa-sweetalert="<?php echo isset($_SESSION['mesa_sweetalert']) && $_SESSION['mesa_sweetalert'] ? 'true' : 'false'; ?>" data-nombre-sala="<?php echo htmlspecialchars($nombre_sala); ?>">    <div class="container">
         <nav class="navegacion">
             <!-- Sección izquierda con el logo grande y el ícono adicional más pequeño -->
             <div class="navbar-left">
@@ -128,7 +127,7 @@ try {
                                 <p><strong>Sillas:</strong> " . htmlspecialchars($mesa['numero_sillas']) . "</p>
                                 <form method='POST' action='./php/reservar.php?id_sala=" . htmlspecialchars($id_sala) . "'>
                                     <input type='hidden' name='mesa_id' value='" . htmlspecialchars($mesa['id_mesa']) . "'>
-                                    <button type='submit' name='btn-reservar' class='btn-reservar'>
+                                    <button type='submit' name='btn-reservar' class='btn-estado'>
                                         Reservar
                                     </button>
                                 </form>

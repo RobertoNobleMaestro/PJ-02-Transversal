@@ -82,10 +82,11 @@
                     <input type="file" class="form-control" id="imagen_sala" name="imagen_sala" accept="image/*">
                 </div>
 
-                <button class="btn btn-primary" type="submit">Confirmar Acción</button>
+                <button class="form-button" type="submit">Confirmar Acción</button>
                 <br><br>
-                <!-- Botón Cancelar -->
-                <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
+                <div class="text-mid">
+                    <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
+                </div>   
             </form>
         </div>
         <script>

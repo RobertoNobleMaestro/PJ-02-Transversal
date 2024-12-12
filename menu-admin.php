@@ -100,7 +100,7 @@ try {
                 </select>
                 </div>
                 <div class="me-3 mb-3">
-                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <button type="submit" class="btn btn-primary" style="margin-right: 1rem;">Filtrar</button>
                     <button type="button" class="btn btn-secondary" onclick="window.location.href = window.location.pathname;">Borrar Filtros</button>    
                 </div>
             </div>

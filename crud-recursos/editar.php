@@ -38,16 +38,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $imagen_temp = $_FILES['imagen_sala']['tmp_name'];
             $imagen_nombre = $_FILES['imagen_sala']['name'];
             $imagen_ext = strtolower(pathinfo($imagen_nombre, PATHINFO_EXTENSION));
-
+        
             // Validar la extensión
             $imagenes_permitidas = ['jpg', 'jpeg', 'png', 'gif'];
             if (in_array($imagen_ext, $imagenes_permitidas)) {
-                // Generar un nuevo nombre para la imagen y moverla
-                $nueva_imagen = $nombre_sala . '.' . $imagen_ext; // Nueva imagen asociada al nombre de la sala
+                // Generar un nuevo nombre para la imagen
+                $nueva_imagen = uniqid('sala_' . $id_sala . '_') . '.' . $imagen_ext; // Generar un nombre único
                 $ruta_imagen = '../img/' . $nueva_imagen;
-
-                if (!move_uploaded_file($imagen_temp, $ruta_imagen)) {
-                    throw new Exception("Error al subir la nueva imagen.");
+        
+                // Mover el archivo a la carpeta de destino
+                if (move_uploaded_file($imagen_temp, $ruta_imagen)) {
+                    // Eliminar la imagen anterior, si existe
+                    if ($imagen_actual && file_exists('../img/' . $imagen_actual)) {
+                        unlink('../img/' . $imagen_actual);
+                    }
+                } else {
+                    throw new Exception("Error al mover la nueva imagen.");
                 }
             } else {
                 throw new Exception("Formato de imagen no permitido.");
@@ -59,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             UPDATE tbl_mesas 
             SET 
                 numero_mesa = :numero_mesa,
-                numero_sillas = :numero_sillas,
+                numero_sillas = :numero_sillas
             WHERE id_mesa = :id_mesa
         ";
         $stmt_update_mesa = $conexion->prepare($sql_update_mesa);
@@ -69,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt_update_mesa->execute();
 
         // Actualizar los datos de la sala (solo imagen_sala si cambia)
-        if ($nueva_imagen !== $imagen_actual) {  // Solo actualizar imagen si realmente ha cambiado
+        if ($nueva_imagen !== $imagen_actual || isset($_FILES['imagen_sala'])) {  
             $sql_update_sala = "
                 UPDATE tbl_salas 
                 SET imagen_sala = :imagen_sala
@@ -94,5 +100,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die();
     }
 }
-
 ?>
