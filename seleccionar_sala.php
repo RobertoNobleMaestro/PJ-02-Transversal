@@ -73,20 +73,8 @@ if (!isset($_SESSION['usuario'])) {
                         $result_total_sillas = $stmt_total_sillas->fetch(PDO::FETCH_ASSOC);
                         $total_sillas = $result_total_sillas['total_sillas'];
 
-                        // Obtener las sillas libres
-                        $query_sillas_libres = "
-                            SELECT SUM(m.numero_sillas) AS total_sillas_libres
-                            FROM tbl_mesas m
-                            WHERE m.estado = 'libre' AND m.id_sala = :id_sala";
-                        $stmt_sillas_libres = $conexion->prepare($query_sillas_libres);
-                        $stmt_sillas_libres->bindParam(':id_sala', $id_sala, PDO::PARAM_INT);
-                        $stmt_sillas_libres->execute();
-                        $result_sillas_libres = $stmt_sillas_libres->fetch(PDO::FETCH_ASSOC);
-                        $sillas_libres = $result_sillas_libres['total_sillas_libres'];
-
-                        // Mostrar la información de la sala con las sillas libres
                         echo "<a class='image-container' href='./gestionar_mesas.php?categoria=" . urlencode($categoria_seleccionada) . "&id_sala=" . $id_sala . "'>
-                            <img src='./img/" . htmlspecialchars($sala['nombre_sala']) . ".jpg' alt='' id='terraza'>
+                            <img src='./img/" . htmlspecialchars($sala['imagen_sala']) . "' alt='' id='terraza'>
                             <div class='text-overlay'>" . htmlspecialchars($sala['nombre_sala']) . "<br>Sillas libres: " . ($sillas_libres ?? 0) . "/" . ($total_sillas ?? 0)  . "</div>
                         </a>";
                     }

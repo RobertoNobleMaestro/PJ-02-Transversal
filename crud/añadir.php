@@ -1,94 +1,36 @@
 <?php
 require_once('../php/conexion.php');
 session_start();
-
 if (!isset($_SESSION['usuario'])) {
-    header("Location: ../index.php?error=sesion_no_iniciada");
+    header("Location: index.php?error=sesion_no_iniciada");
     exit();
 }
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $accion = $_POST['accion'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_crear_usuario'])) {
+    $nombre_user = htmlspecialchars($_POST['nombre_user']);
+    $nombre_real = htmlspecialchars($_POST['nombre_real']);
+    $ape_usuario = htmlspecialchars($_POST['ape_usuario']);
+    $rol_user = intval($_POST['rol_user']);
+    $password = $_POST['contrasena']; // Capturar la contraseña sin escapar todavía
 
     try {
-        if ($accion === 'crear_sala') {
-            // Crear una nueva sala con mesas predeterminadas
-            $nombre_sala = $_POST['nombre_sala'];
-            $tipo_sala = $_POST['tipo_sala'];
-            $numero_mesas = $_POST['numero_mesas'];
-            $sillas_por_mesa = 4; // Default value for chairs per table
+        // Encriptar la contraseña con bcrypt
+        $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
-            if (!empty($nombre_sala) && !empty($tipo_sala) && !empty($numero_mesas)) {
-                // Insertar la sala en la base de datos
-                $sql_sala = "INSERT INTO tbl_salas (nombre_sala, tipo_sala) VALUES (:nombre_sala, :tipo_sala)";
-                $stmt_sala = $conexion->prepare($sql_sala);
-                $stmt_sala->execute([
-                    ':nombre_sala' => $nombre_sala,
-                    ':tipo_sala' => $tipo_sala
-                ]);
+        // Consulta para insertar el nuevo usuario
+        $sql = "INSERT INTO tbl_usuarios (nombre_user, nombre_real, ape_usuario, rol_user, contrasena) 
+                VALUES (:nombre_user, :nombre_real, :ape_usuario, :rol_user, :contrasena)";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(':nombre_user', $nombre_user, PDO::PARAM_STR);
+        $stmt->bindParam(':nombre_real', $nombre_real, PDO::PARAM_STR);
+        $stmt->bindParam(':ape_usuario', $ape_usuario, PDO::PARAM_STR);
+        $stmt->bindParam(':rol_user', $rol_user, PDO::PARAM_INT);
+        $stmt->bindParam(':contrasena', $password_hash, PDO::PARAM_STR);
+        $stmt->execute();
 
-                // Obtener el ID de la sala recién creada
-                $id_sala = $conexion->lastInsertId();
-
-                // Insertar mesas asociadas a la nueva sala
-                $sql_mesa = "INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES (:numero_mesa, :id_sala, :numero_sillas, 'libre')";
-                $stmt_mesa = $conexion->prepare($sql_mesa);
-
-                for ($i = 1; $i <= $numero_mesas; $i++) {
-                    $numero_mesa = $id_sala * 100 + $i; // Ejemplo: Sala 1 -> Mesas 101, 102...
-                    $stmt_mesa->execute([
-                        ':numero_mesa' => $numero_mesa,
-                        ':id_sala' => $id_sala,
-                        ':numero_sillas' => $sillas_por_mesa
-                    ]);
-                }
-
-                header("Location: ../menu-recursos.php?mensaje=sala_creada");
-                exit();
-            } else {
-                header("Location: ../menu-recursos.php?error=datos_incompletos");
-                exit();
-            }
-
-        } elseif ($accion === 'añadir_mesa') {
-            // Añadir mesas a una sala existente
-            $id_sala = $_POST['sala'];
-            $numero_mesas = $_POST['numero_mesas'];
-            $sillas_por_mesa = $_POST['sillas_por_mesa'] ?? 4;
-
-            if (!empty($id_sala) && !empty($numero_mesas)) {
-                // Obtener el último número de mesa de la sala seleccionada
-                $sql_max_mesa = "SELECT MAX(numero_mesa) as max_mesa FROM tbl_mesas WHERE id_sala = :id_sala";
-                $stmt_max_mesa = $conexion->prepare($sql_max_mesa);
-                $stmt_max_mesa->execute([':id_sala' => $id_sala]);
-                $max_mesa = $stmt_max_mesa->fetch(PDO::FETCH_ASSOC)['max_mesa'] ?? ($id_sala * 100);
-
-                $sql_mesa = "INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES (:numero_mesa, :id_sala, :numero_sillas, 'libre')";
-                $stmt_mesa = $conexion->prepare($sql_mesa);
-
-                for ($i = 1; $i <= $numero_mesas; $i++) {
-                    $numero_mesa = $max_mesa + $i;
-                    $stmt_mesa->execute([
-                        ':numero_mesa' => $numero_mesa,
-                        ':id_sala' => $id_sala,
-                        ':numero_sillas' => $sillas_por_mesa
-                    ]);
-                }
-
-                header("Location: ../menu-recursos.php?mensaje=mesas_agregadas");
-                exit();
-            } else {
-                header("Location: ../menu-recursos.php?error=datos_incompletos");
-                exit();
-            }
-
-        } else {
-            header("Location: ../menu-recursos.php?error=accion_no_valida");
-            exit();
-        }
+        header('Location: ../menu-admin.php?mensaje=usuario_creado');
+        exit();
     } catch (Exception $e) {
-        echo "Error: " . htmlspecialchars($e->getMessage());
-        die();
+        echo "Error al añadir el usuario: " . htmlspecialchars($e->getMessage());
     }
 }
 ?>

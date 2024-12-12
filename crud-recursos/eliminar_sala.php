@@ -25,13 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Si el usuario quiere eliminar solo la mesa
         if ($eliminar_sala == 'no') {
             // Eliminar primero las ocupaciones asociadas a la mesa
-            $sql_delete_ocupacion = "DELETE FROM tbl_ocupaciones WHERE id_mesa = :id_mesa";
+            $sql_delete_ocupacion = "DELETE FROM tbl_reservas WHERE id_mesa = :id_mesa";
             $stmt_delete_ocupacion = $conexion->prepare($sql_delete_ocupacion);
             $stmt_delete_ocupacion->bindParam(':id_mesa', $id_mesa, PDO::PARAM_INT);
             $stmt_delete_ocupacion->execute();
 
             // Eliminar las reservas de recursos asociadas a la mesa
-            $sql_delete_reserva = "DELETE FROM tbl_reservas_recursos WHERE id_mesa = :id_mesa";
+            $sql_delete_reserva = "DELETE FROM tbl_reservas WHERE id_mesa = :id_mesa";
             $stmt_delete_reserva = $conexion->prepare($sql_delete_reserva);
             $stmt_delete_reserva->bindParam(':id_mesa', $id_mesa, PDO::PARAM_INT);
             $stmt_delete_reserva->execute();
@@ -45,13 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Si el usuario quiere eliminar también la sala
 
             // Eliminar primero las ocupaciones asociadas a todas las mesas de la sala
-            $sql_delete_ocupaciones = "DELETE FROM tbl_ocupaciones WHERE id_mesa IN (SELECT id_mesa FROM tbl_mesas WHERE id_sala = :id_sala)";
+            $sql_delete_ocupaciones = "DELETE FROM tbl_reservas WHERE id_mesa IN (SELECT id_mesa FROM tbl_mesas WHERE id_sala = :id_sala)";
             $stmt_delete_ocupaciones = $conexion->prepare($sql_delete_ocupaciones);
             $stmt_delete_ocupaciones->bindParam(':id_sala', $id_sala, PDO::PARAM_INT);
             $stmt_delete_ocupaciones->execute();
 
             // Eliminar las reservas de recursos asociadas a todas las mesas de la sala
-            $sql_delete_reservas = "DELETE FROM tbl_reservas_recursos WHERE id_mesa IN (SELECT id_mesa FROM tbl_mesas WHERE id_sala = :id_sala)";
+            $sql_delete_reservas = "DELETE FROM tbl_reservas WHERE id_mesa IN (SELECT id_mesa FROM tbl_mesas WHERE id_sala = :id_sala)";
             $stmt_delete_reservas = $conexion->prepare($sql_delete_reservas);
             $stmt_delete_reservas->bindParam(':id_sala', $id_sala, PDO::PARAM_INT);
             $stmt_delete_reservas->execute();

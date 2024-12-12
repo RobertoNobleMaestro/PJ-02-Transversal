@@ -21,7 +21,6 @@ try {
         SELECT 
             m.numero_mesa,
             m.numero_sillas,
-            m.estado,
             s.id_sala,
             s.imagen_sala
         FROM 
@@ -40,7 +39,6 @@ try {
     if ($mesa) {
         $numero_mesa = $mesa['numero_mesa'];
         $numero_sillas = $mesa['numero_sillas'];
-        $estado = $mesa['estado'];
         $id_sala = $mesa['id_sala'];
         $imagen_sala = $mesa['imagen_sala']; // Obtención de la imagen de la sala
     }
@@ -108,15 +106,6 @@ try {
                 <input type="number" class="form-control" id="numero_sillas" name="numero_sillas" value="<?php echo htmlspecialchars($numero_sillas); ?>" required>
             </div>
 
-            <!-- Campo para el estado de la mesa -->
-            <div class="mb-3">
-                <label for="estado">Estado</label>
-                <select class="form-control" id="estado" name="estado">
-                    <option value="libre" <?php echo ($estado == 'libre') ? 'selected' : ''; ?>>Libre</option>
-                    <option value="ocupada" <?php echo ($estado == 'ocupada') ? 'selected' : ''; ?>>Ocupada</option>
-                </select>
-            </div>
-
             <!-- Campo para editar la imagen de la sala -->
             <div class="mb-3">
                 <label for="imagen_sala">Imagen de la Sala</label>
@@ -131,10 +120,12 @@ try {
             </div>
 
             <!-- Botón para actualizar la mesa -->
-            <button type="submit" class="btn btn-primary">Actualizar Recurso</button>
+            <button type="submit" class="form-button">Actualizar Recurso</button>
         </form>
         <br>
-        <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
+        <div class="text-mid">
+            <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
+        </div>       
     </div>
 </body>
 </html>

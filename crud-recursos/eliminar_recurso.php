@@ -18,7 +18,7 @@ $id_mesa = htmlspecialchars($_GET['id_mesa']);
 // Obtener los datos de la mesa y la sala asociada
 try {
     $sql_get_mesa = "
-        SELECT m.numero_mesa, m.numero_sillas, m.estado, s.id_sala, s.nombre_sala
+        SELECT m.numero_mesa, m.numero_sillas, s.id_sala, s.nombre_sala
         FROM tbl_mesas m
         JOIN tbl_salas s ON m.id_sala = s.id_sala
         WHERE m.id_mesa = :id_mesa
@@ -68,10 +68,12 @@ try {
                     <option value="si">Sí</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <button type="submit" class="form-button">Eliminar</button>
         </form>
         <br>
-        <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
+        <div class="text-mid">
+            <a href="../menu-recursos.php" class="cancelar-btn">Cancelar</a>
+        </div>    
     </div>
 </body>
 </html>

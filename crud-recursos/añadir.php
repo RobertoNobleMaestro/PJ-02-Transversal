@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $id_sala = $conexion->lastInsertId();
 
                 // Insertar mesas asociadas a la nueva sala
-                $sql_mesa = "INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES (:numero_mesa, :id_sala, :numero_sillas, 'libre')";
+                $sql_mesa = "INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas) VALUES (:numero_mesa, :id_sala, :numero_sillas)";
                 $stmt_mesa = $conexion->prepare($sql_mesa);
 
                 for ($i = 1; $i <= $numero_mesas; $i++) {
@@ -81,8 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($accion === 'añadir_mesa') {
             // Añadir mesas a una sala existente
             $id_sala = htmlspecialchars($_POST['sala_mesa']);
-            $numero_mesas = htmlspecialchars($_POST['numero_mesas']);
-            $sillas_por_mesa = htmlspecialchars($_POST['sillas_por_mesa'] ?? 4);
+            $numero_mesas = htmlspecialchars($_POST['numero_mesa']);
+            $sillas_por_mesa = htmlspecialchars($_POST['numero_sillas'] ?? 4);
 
             if (!empty($id_sala) && !empty($numero_mesas)) {
                 // Obtener el último número de mesa de la sala seleccionada
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt_max_mesa->execute([':id_sala' => $id_sala]);
                 $max_mesa = $stmt_max_mesa->fetch(PDO::FETCH_ASSOC)['max_mesa'] ?? ($id_sala * 100);
 
-                $sql_mesa = "INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas, estado) VALUES (:numero_mesa, :id_sala, :numero_sillas, 'libre')";
+                $sql_mesa = "INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas) VALUES (:numero_mesa, :id_sala, :numero_sillas)";
                 $stmt_mesa = $conexion->prepare($sql_mesa);
 
                 for ($i = 1; $i <= $numero_mesas; $i++) {
