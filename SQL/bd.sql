@@ -42,7 +42,8 @@ CREATE TABLE tbl_reservas (
     fecha_fin TIME NOT NULL,                      -- Hora de finalización de la reserva
     id_mesa INT NOT NULL,                        -- ID de la mesa
     id_usuario INT NOT NULL,                  -- ID del usuario que hace la reserva
-    id_turno INT NOT NULL                        -- Agregar la columna id_turno
+    id_turno INT NOT NULL                        -- Agregar la columna id_turno                  -- ID del usuario que hace la reserva
+);
 
 );
 CREATE TABLE tbl_turnos (
