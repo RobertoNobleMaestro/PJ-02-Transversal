@@ -2,12 +2,10 @@
 session_start();
 require_once('../php/conexion.php');
 
-// Verificar que el usuario esté autenticado
-if (!isset($_SESSION['usuario'])) {
-    header('Location: ../index.php?error=sesiones');
+if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "2") {
+    header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }
-
 // Verificar que el ID del usuario a eliminar esté presente y sea válido
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id_usuario = intval($_GET['id']);

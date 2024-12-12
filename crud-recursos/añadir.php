@@ -2,7 +2,7 @@
 require_once('../php/conexion.php');
 session_start();
 
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "2") {
     header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }

@@ -6,7 +6,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     echo "ID de usuario no especificado.";
     exit();
 }
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "2") {
     header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }

@@ -2,9 +2,8 @@
 session_start();
 require_once('../php/conexion.php');
 
-// Verificar sesión iniciada
-if (!isset($_SESSION['usuario'])) {
-    header("Location: index.php?error=sesion_no_iniciada");
+if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "1") {
+    header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }
 
@@ -133,9 +132,10 @@ try {
                 <input type="hidden" name="mesa_id" value="<?php echo $mesa_id; ?>" class="form-label">
                 <button type="submit" name="btn_reservar" id="reservar" class="form-button">Reservar</button>
                 <br><br>
-                <a href="../gestionar_mesas.php" class="cancelar-btn">Cancelar</a>
             </div>
-        </form>
+            <br>
+            <a href="../gestionar_mesas.php?id_sala=<?php echo urlencode($id_sala); ?>" class="cancelar-btn">Cancelar</a>
+            </form>
     </div>
 </body>
 
