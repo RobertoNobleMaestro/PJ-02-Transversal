@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $reservaDateTime = new DateTime("$fecha_reserva $fecha_inicio");
 
         if ($reservaDateTime < $currentDateTime) {
-            header("Location: ../gestionar_mesa.php?error=fecha_pasada&id_sala=" . urlencode($id_sala));
+            header("Location: ../gestionar_mesas.php?id_sala=" . urlencode($id_sala) . "&error=fecha_pasada");
             exit();
         }
 

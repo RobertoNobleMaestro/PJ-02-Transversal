@@ -37,7 +37,8 @@ try {
 }
 ?>
 
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -46,55 +47,18 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script>
-        // Actualizar el formulario dinámico basado en el turno seleccionado
-        function updateForm() {
-            const turno = document.getElementById('turno').value;
-            const formReserva = document.getElementById('form_reserva');
-
-            if (turno !== "") {
-                formReserva.classList.remove('hidden');
-                loadTurnos(turno); // Cargar horarios según el turno seleccionado
-            } else {
-                formReserva.classList.add('hidden');
-            }
-        }
-
-        // Cargar horarios dinámicamente según turno
-        function loadTurnos(turno) {
-            const horaInicio = document.getElementById('fecha_inicio');
-            horaInicio.innerHTML = "<option value=''>Selecciona una hora</option>"; // Limpiar opciones previas
-
-            let horas = turno === '1' ? ['12:00', '13:00', '14:00', '15:00'] : ['19:00', '20:00', '21:00', '22:00'];
-
-            horas.forEach(hora => {
-                const option = document.createElement('option');
-                option.value = hora;
-                option.textContent = hora;
-                horaInicio.appendChild(option);
-            });
-        }
-
-        // Actualizar automáticamente la hora final
-        function updateHoraFin() {
-            const horaInicio = document.getElementById('fecha_inicio').value;
-            const horaFinal = document.getElementById('fecha_fin');
-
-            if (horaInicio) {
-                const [hora] = horaInicio.split(':');
-                const nuevaHora = parseInt(hora) + 1; // Incrementar 1 hora
-                horaFinal.value = `${nuevaHora}:00`;
-            } else {
-                horaFinal.value = ''; // Limpiar si no hay hora de inicio seleccionada
-            }
-        }
-    </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .hidden {
             display: none;
         }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
     </style>
+    <title>Gestión de Reservas</title>
 </head>
 
 <body>
@@ -102,41 +66,49 @@ try {
         <h1>Gestión de Reservas</h1>
         <br>
         <h3 class="text-center">Sala: <?php echo htmlspecialchars($nombre_sala); ?> | Mesa: <?php echo htmlspecialchars($numero_mesa); ?></h3>
-        <form action="./reserva-crear.php" method="post" class="mt-3">
+        <form id="reservaForm" action="./reserva-crear.php" method="post" class="mt-3">
             <label for="turno">Seleccionar Turno:</label>
-            <select id="turno" name="id_turno" onchange="updateForm()" class="form-label">
+            <select id="turno" name="id_turno" class="form-label">
                 <option value="" selected disabled>Elige un turno</option>
                 <?php foreach ($turnos as $turno): ?>
                     <option value="<?php echo htmlspecialchars($turno['id_turno']); ?>">
                         <?php echo htmlspecialchars($turno['nombre_turno']); ?>
                     </option>
                 <?php endforeach; ?>
-            </select><br>
+            </select>
+            <span id="turnoError" class="error"></span><br>
 
             <!-- Formulario de Reserva -->
             <div id="form_reserva" class="hidden mt-3">
                 <h3>Reservar</h3>
 
-                <label for="fecha_inicio">Hora de la Reserva</label>
-                <select id="fecha_inicio" name="fecha_inicio" onchange="updateHoraFin();" class="form-label">
-                    <option value="">Selecciona una hora</option>
-                </select><br>
+                <label for="fecha_inicio">Hora de la Reserva:</label>
+                <select id="fecha_inicio" name="fecha_inicio" class="form-label">
+                    <option value="" disabled selected>Selecciona una hora</option>
+                </select>
+                <span id="fechaInicioError" class="error"></span><br>
 
-                <label for="fecha_fin">Hora final de la Reserva</label>
-                <input type="text" id="fecha_fin" name="fecha_fin" readonly class="form-label"><br>
+                <label for="fecha_fin">Hora final de la Reserva:</label>
+                <input type="text" id="fecha_fin" name="fecha_fin" readonly class="form-label">
+                <span id="fechaFinError" class="error"></span><br>
 
-                <label for="fecha_reserva">Día de la reserva</label>
-                <input type="date" id="fecha_reserva" name="fecha_reserva" class="form-label"><br>
+                <label for="fecha_reserva">Día de la Reserva:</label>
+                <input type="date" id="fecha_reserva" name="fecha_reserva" class="form-label">
+                <span id="fechaReservaError" class="error"></span><br>
                 <br>
-                <input type="hidden" name="id_sala" value="<?php echo $id_sala; ?>" class="form-label">
-                <input type="hidden" name="mesa_id" value="<?php echo $mesa_id; ?>" class="form-label">
-                <button type="submit" name="btn_reservar" id="reservar" class="form-button">Reservar</button>
-                <br><br>
+
+                <input type="hidden" name="id_sala" value="<?php echo $id_sala; ?>">
+                <input type="hidden" name="mesa_id" value="<?php echo $mesa_id; ?>">
+
+                <button type="submit" id="reservar" class="form-button">Reservar</button>
             </div>
             <br>
-            <a href="../gestionar_mesas.php?id_sala=<?php echo urlencode($id_sala); ?>" class="cancelar-btn">Cancelar</a>
-            </form>
+            <div class="text-mid">
+                <a href="../gestionar_mesas.php?id_sala=<?php echo urlencode($id_sala); ?>" class="cancelar-btn">Cancelar</a>
+            </div>
+        </form>
     </div>
+    <script src="../js/validaciones-reservas.js" defer></script>
 </body>
 
 </html>

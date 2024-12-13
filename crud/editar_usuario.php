@@ -1,6 +1,7 @@
 <?php
 require_once('../php/conexion.php');
 session_start();
+
 // Verificar que se haya enviado el ID del usuario
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     echo "ID de usuario no especificado.";
@@ -10,7 +11,6 @@ if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "2") {
     header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }
-
 
 $id_usuario = htmlspecialchars($_GET['id']);
 
@@ -57,32 +57,44 @@ try {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
 </head>
 <body>
     <div class="container-form">
     <h1>Editar Usuario</h1>
-    <form action="editar.php" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="id_usuario" value="<?php echo htmlspecialchars($usuario['id_usuario']); ?>"class="form-label">
-
+    <form action="editar.php" method="POST" enctype="multipart/form-data" id="registrationForm">
+        <!-- Campo oculto para ID del usuario -->
+        <input type="hidden" name="id_usuario" value="<?php echo htmlspecialchars($usuario['id_usuario']); ?>">
+    
+        <input type="password" id="contrasena" name="contrasena" class="form-label" hidden>
+            <span class="error" id="contrasenaError"></span>
+        <!-- Campo para Nombre de Usuario -->
         <label for="nombre_user">Nombre Usuario:</label>
-        <input type="text" id="nombre_user" name="nombre_user" value="<?php echo htmlspecialchars($usuario['nombre_user']); ?>" class="form-label"><br>
+        <input type="text" id="nombre_user" name="nombre_user" value="<?php echo htmlspecialchars($usuario['nombre_user']); ?>" class="form-label">
+        <span class="error" id="nombreUserError"></span><br><br>
 
+        <!-- Campo para Nombre Real -->
         <label for="nombre_real">Nombre Real:</label>
-        <input type="text" id="nombre_real" name="nombre_real" value="<?php echo htmlspecialchars($usuario['nombre_real']); ?>" class="form-label"><br>
+        <input type="text" id="nombre_real" name="nombre_real" value="<?php echo htmlspecialchars($usuario['nombre_real']); ?>" class="form-label">
+        <span class="error" id="nombreRealError"></span><br><br>
 
+        <!-- Campo para Apellido -->
         <label for="ape_usuario">Apellido:</label>
-        <input type="text" id="ape_usuario" name="ape_usuario" value="<?php echo htmlspecialchars($usuario['ape_usuario']); ?>" class="form-label"><br>
-
+        <input type="text" id="ape_usuario" name="ape_usuario" value="<?php echo htmlspecialchars($usuario['ape_usuario']); ?>" class="form-label">
+        <span class="error" id="apeUsuarioError"></span><br><br>
+        <!-- Campo para Rol -->
         <label for="rol_user">Rol:</label>
         <select id="rol_user" name="rol_user" class="form-label">
+            <option value="" selected disabled>Selecciona un rol</option>
             <?php foreach ($roles as $rol) { ?>
                 <option value="<?php echo htmlspecialchars($rol['id_rol']); ?>" 
                         <?php echo ($rol['id_rol'] == $usuario['rol_user']) ? 'selected' : ''; ?>>
                     <?php echo htmlspecialchars($rol['nombre_rol']); ?>
                 </option>
             <?php } ?>
-        </select><br><br>
+        </select>
+        <span class="error" id="rolUserError"></span><br><br>
+
+        <!-- Botón de envío -->
         <button type="submit" name="btn_actualizar" class="form-button">Actualizar Usuario</button>
         <br><br>
     </form>
@@ -90,6 +102,6 @@ try {
         <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
     </div>
     </div>
-
+    <script src="../js/form-añadir-usuario.js"></script>
 </body>
 </html>
