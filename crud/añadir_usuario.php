@@ -27,39 +27,45 @@ try {
 
 </head>
 <body>
-    <div class="container-form">
-<h1>Añadir Usuario</h1>
-    <form method="POST" action="añadir.php">
-        <label for="nombre_user">Nombre Usuario:</label>
-        <input type="text" id="nombre_user" name="nombre_user" class="form-label"><br>
-        <br>
-        <label for="nombre_real">Nombre Real:</label>
-        <input type="text" id="nombre_real" name="nombre_real" class="form-label"><br>
-        <br>
-        <label for="ape_usuario">Apellido:</label>
-        <input type="text" id="ape_usuario" name="ape_usuario" class="form-label"><br>
-        <br>
-        <label for="password">Contraseña:</label>
-        <input type="password" id="contrasena" name="contrasena" class="form-label"><br>
-        <br>
-        <label for="rol_user">Rol:</label>
-        <select id="rol_user" name="rol_user" class="form-label">
-            <?php
-            foreach ($roles as $rol) {
-                echo '<option value="' . htmlspecialchars($rol['id_rol']) . '">';
-                echo htmlspecialchars($rol['nombre_rol']);
-                echo '</option>';
-            }
-            ?>
-        </select><br><br>
+<div class="container-form">
+        <h1>Añadir Usuario</h1>
+        <form method="POST" action="añadir.php" id="registrationForm">
+            <label for="nombre_user">Nombre Usuario:</label>
+            <input type="text" id="nombre_user" name="nombre_user" class="form-label">
+            <span class="error" id="nombreUserError"></span><br><br>
 
-        <button type="submit"  class="form-button" name="btn_crear_usuario">Añadir Usuario</button>
-        <br><br>
-    </form>
-    <div class="text-mid">
-        <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
+            <label for="nombre_real">Nombre Real:</label>
+            <input type="text" id="nombre_real" name="nombre_real" class="form-label">
+            <span class="error" id="nombreRealError"></span><br><br>
+
+            <label for="ape_usuario">Apellido:</label>
+            <input type="text" id="ape_usuario" name="ape_usuario" class="form-label">
+            <span class="error" id="apeUsuarioError"></span><br><br>
+
+            <label for="password">Contraseña:</label>
+            <input type="password" id="contrasena" name="contrasena" class="form-label">
+            <span class="error" id="contrasenaError"></span><br><br>
+
+            <label for="rol_user">Rol:</label>
+            <select id="rol_user" name="rol_user" class="form-label">
+                <option value="" selected disabled>Selecciona un rol</option>
+                <?php
+                foreach ($roles as $rol) {
+                    echo '<option value="' . htmlspecialchars($rol['id_rol']) . '">';
+                    echo htmlspecialchars($rol['nombre_rol']);
+                    echo '</option>';
+                }
+                ?>
+            </select>
+            <span class="error" id="rolUserError"></span><br><br>
+
+            <button type="submit" class="form-button" name="btn_crear_usuario">Añadir Usuario</button>
+        </form>
+        <br>
+        <div class="text-mid">
+            <a href="../menu-admin.php" class="cancelar-btn">Cancelar</a>
+        </div>
     </div>
-    </div>
-    
+    <script src="../js/form-añadir-usuario.js"></script>
 </body>
 </html>
