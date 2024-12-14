@@ -13,6 +13,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_crear_usuario']))
     $password = $_POST['contrasena']; // Capturar la contraseña sin escapar todavía
 
     try {
+        // Verificar si el nombre de usuario ya existe
+        $sql_check = "SELECT COUNT(*) FROM tbl_usuarios WHERE nombre_user = :nombre_user";
+        $stmt_check = $conexion->prepare($sql_check);
+        $stmt_check->bindParam(':nombre_user', $nombre_user, PDO::PARAM_STR);
+        $stmt_check->execute();
+        
+        // Si el nombre de usuario ya existe
+        if ($stmt_check->fetchColumn() > 0) {
+            // Redirigir con mensaje de error
+            header("Location: ../añadir_usuario.php?error=usuario_existente");
+            exit();
+        }
+
         // Encriptar la contraseña con bcrypt
         $password_hash = password_hash($password, PASSWORD_BCRYPT);
 
@@ -27,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_crear_usuario']))
         $stmt->bindParam(':contrasena', $password_hash, PDO::PARAM_STR);
         $stmt->execute();
 
+        // Redirigir con mensaje de éxito
         header('Location: ../menu-admin.php?mensaje=usuario_creado');
         exit();
     } catch (Exception $e) {
