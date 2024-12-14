@@ -1,14 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Referencias a elementos del formulario
     const nombreSala = document.getElementById('nombre_sala');
-    const numeroMesa = document.getElementById('numero_mesa');
     const numeroSillas = document.getElementById('numero_sillas');
     const imagenSala = document.getElementById('imagen_sala');
     const formulario = document.getElementById('editForm');
 
     // Referencias a los spans de error
     const nombreSalaError = document.getElementById('nombreSalaError');
-    const numeroMesaError = document.getElementById('numeroMesaError');
     const numeroSillasError = document.getElementById('numeroSillasError');
     const imagenSalaError = document.getElementById('imagenSalaError');
 
@@ -25,18 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             nombreSalaError.textContent = "";
             nombreSala.style.borderColor = "";
-            return true;
-        }
-    }
-
-    function validateNumeroMesa() {
-        if (numeroMesa.value === "" || parseInt(numeroMesa.value) <= 0) {
-            numeroMesaError.textContent = "El número de mesa debe ser mayor a 0.";
-            numeroMesa.style.borderColor = "red";
-            return false;
-        } else {
-            numeroMesaError.textContent = "";
-            numeroMesa.style.borderColor = "";
             return true;
         }
     }
@@ -67,7 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Asignación de eventos
     nombreSala.onblur = validateNombreSala;
-    numeroMesa.onblur = validateNumeroMesa;
     numeroSillas.onblur = validateNumeroSillas;
     imagenSala.onchange = validateImagenSala;
 

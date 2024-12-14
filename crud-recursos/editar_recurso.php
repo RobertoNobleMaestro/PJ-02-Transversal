@@ -86,8 +86,7 @@ try {
 
             <div class="mb-3">
                 <label for="numero_mesa">Número de Mesa</label>
-                <input type="number" class="form-control" id="numero_mesa" name="numero_mesa" value="<?php echo htmlspecialchars($numero_mesa); ?>">
-                <span id="numeroMesaError" class="error"></span>
+                <input type="number" class="form-control" id="numero_mesa" name="numero_mesa" value="<?php echo htmlspecialchars($numero_mesa); ?>" readonly>
             </div>
 
             <div class="mb-3">

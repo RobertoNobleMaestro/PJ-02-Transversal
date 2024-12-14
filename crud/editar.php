@@ -5,10 +5,12 @@ if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "2") {
     header("Location: ../index.php?error=sesion_no_iniciada");
     exit();
 }
+
 // Verificar si el SweetAlert ya se mostró
 if (!isset($_SESSION['sweetalert_mostrado'])) {
     $_SESSION['sweetalert_mostrado'] = false;
 }
+
 // Verificar que se haya enviado el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
     $id_usuario = htmlspecialchars($_POST['id_usuario']);
@@ -18,6 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
     $rol_user = isset($_POST['rol_user']) ? htmlspecialchars($_POST['rol_user']) : '';
 
     try {
+        // Verificar si el nombre de usuario ya existe, excluyendo el usuario actual
+        $sql_check = "SELECT COUNT(*) FROM tbl_usuarios WHERE nombre_user = :nombre_user AND id_usuario != :id_usuario";
+        $stmt_check = $conexion->prepare($sql_check);
+        $stmt_check->bindParam(':nombre_user', $nombre_user, PDO::PARAM_STR);
+        $stmt_check->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+        $stmt_check->execute();
+
+        if ($stmt_check->fetchColumn() > 0) {
+            // Si el nombre de usuario ya está en uso, redirigir con un mensaje de error
+            header("Location: ../editar_usuario.php?id_usuario=$id_usuario&error=usuario_existente");
+            exit();
+        }
+
         // Construir la consulta SQL para actualizar
         $sql = "UPDATE tbl_usuarios 
                 SET nombre_user = :nombre_user, 
