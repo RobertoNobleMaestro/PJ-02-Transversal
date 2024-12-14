@@ -26,43 +26,42 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
         // Si se confirma la eliminación
         if (isset($_POST['confirmar_eliminar'])) {
-            $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $conexion->beginTransaction();
-
-            // Eliminar datos relacionados en tbl_reservas
-            $sql_reservas_recursos = "DELETE FROM tbl_reservas WHERE id_usuario = :id_usuario";
-            $stmt_reservas_recursos = $conexion->prepare($sql_reservas_recursos);
-            $stmt_reservas_recursos->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
-
-            if (!$stmt_reservas_recursos->execute()) {
-                throw new Exception("Error al eliminar las reservas de recursos relacionadas.");
+            try {
+                $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $conexion->beginTransaction();
+        
+                // Eliminar las reservas relacionadas
+                $sql_reservas_recursos = "DELETE FROM tbl_reservas WHERE id_usuario = :id_usuario";
+                $stmt_reservas_recursos = $conexion->prepare($sql_reservas_recursos);
+                $stmt_reservas_recursos->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+                if (!$stmt_reservas_recursos->execute()) {
+                    throw new Exception("Error al eliminar las reservas de recursos relacionadas.");
+                }
+        
+                // Eliminar el usuario
+                $sql_usuario_delete = "DELETE FROM tbl_usuarios WHERE id_usuario = :id_usuario";
+                $stmt_usuario_delete = $conexion->prepare($sql_usuario_delete);
+                $stmt_usuario_delete->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+                if (!$stmt_usuario_delete->execute()) {
+                    throw new Exception("Error al eliminar el usuario.");
+                }
+        
+                // Confirmar la transacción
+                $conexion->commit();
+        
+                // Redirigir con un mensaje de éxito
+                header('Location: ../menu-admin.php?mensaje=Usuario_eliminado_correctamente');
+                exit();
+            } catch (Exception $e) {
+                // Revertir la transacción en caso de error
+                $conexion->rollBack();
+                
+                // Redirigir con un mensaje de error
+                header("Location: eliminar_usuario.php?id=$id_usuario&error=" . urlencode($e->getMessage()));
+                exit();
             }
-
-            // Eliminar datos relacionados en tbl_reservas
-            $sql_reservas = "DELETE FROM tbl_reservas WHERE id_usuario = :id_usuario";
-            $stmt_reservas = $conexion->prepare($sql_reservas);
-            $stmt_reservas->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
-
-            if (!$stmt_reservas->execute()) {
-                throw new Exception("Error al eliminar las reservas relacionadas.");
-            }
-
-            // Eliminar el usuario
-            $sql_usuario_delete = "DELETE FROM tbl_usuarios WHERE id_usuario = :id_usuario";
-            $stmt_usuario_delete = $conexion->prepare($sql_usuario_delete);
-            $stmt_usuario_delete->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
-
-            if (!$stmt_usuario_delete->execute()) {
-                throw new Exception("Error al eliminar el usuario.");
-            }
-
-            // Confirmar la transacción
-            $conexion->commit();
-
-            // Redirigir con un mensaje de éxito
-            header('Location: ../menu-admin.php?mensaje=Usuario_eliminado_correctamente');
-            exit();
         }
+        
     } catch (Exception $e) {
         // Revertir la transacción en caso de error
         $conexion->rollBack();

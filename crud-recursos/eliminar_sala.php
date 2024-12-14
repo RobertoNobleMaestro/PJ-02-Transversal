@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conexion->commit();
 
         // Redirigir al menú con mensaje de éxito
-        header("Location: ../menu-recursos.php?success=recurso_eliminado");
+        header("Location: ../menu-recursos.php?mensaje=recurso_eliminado");
         exit();
     } catch (Exception $e) {
         // Si ocurre un error, revertimos los cambios

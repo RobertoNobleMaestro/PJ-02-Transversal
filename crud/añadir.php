@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_crear_usuario']))
         // Si el nombre de usuario ya existe
         if ($stmt_check->fetchColumn() > 0) {
             // Redirigir con mensaje de error
-            header("Location: ../añadir_usuario.php?error=usuario_existente");
+            header("Location: ../menu-admin.php?error=usuario_existente");
             exit();
         }
 

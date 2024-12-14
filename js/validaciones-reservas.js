@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Función para cargar horarios dinámicamente
     function loadTurnos(turnoValue) {
-        fechaInicio.innerHTML = "<option value=''>Selecciona una hora</option>";
+        fechaInicio.innerHTML = "<option value='' disabled select>Selecciona una hora</option>";
         const horas = turnoValue === '1' ? ['12:00', '13:00', '14:00', '15:00'] : ['19:00', '20:00', '21:00', '22:00'];
 
         horas.forEach(hora => {

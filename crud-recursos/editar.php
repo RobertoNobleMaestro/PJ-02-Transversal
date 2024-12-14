@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conexion->commit();
 
         // Redirigir al menú con mensaje de éxito
-        header("Location: ../menu-recursos.php?success=recurso_actualizado");
+        header("Location: ../menu-recursos.php?mensaje=recurso_actualizado");
         exit();
     } catch (Exception $e) {
         // Si ocurre un error, deshacer la transacción
