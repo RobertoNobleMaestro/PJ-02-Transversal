@@ -1,7 +1,5 @@
 # 🍽 **SARA CONNOR - Reserva de Mesas en Restaurante**  
 
-## 📚 **FAMILIA PROFESIONAL:** Informática  
-## 🖥️ **CICLO FORMATIVO:** Desarrollo de Aplicaciones Web (DAW)  
 ## 🚀 **Proyecto Transversal PJ 02**  
 
 ---
