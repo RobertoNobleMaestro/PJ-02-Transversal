@@ -56,4 +56,4 @@ Este proyecto es una aplicación web desarrollada como parte del **Proyecto PJ 0
 
 1. Clona el repositorio desde GitHub:  
    ```bash
-   git clone https://github.com/Dmasc67/2425_DAW2_M12_Projecte-01_SARA-CONNOR
+   git clone https://github.com/RobertoNobleMaestro/PJ-02-Transversal.git
