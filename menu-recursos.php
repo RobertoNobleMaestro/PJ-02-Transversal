@@ -177,7 +177,7 @@ try {
         }
         ?>
     </div>
-    <script src="./js/sweat_alert_recursos.js"></script>
+    <script src="./js/sweet_alerts.js"></script>
 </body>
 </html>
    

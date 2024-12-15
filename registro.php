@@ -18,9 +18,10 @@ if (!isset($_SESSION['usuario'])) {
     <link rel="stylesheet" href="./css/menu.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <title>Historial de Ocupaciones</title>
+    <title>Historial de reservas</title>
 </head>
 
 <body>
@@ -32,7 +33,7 @@ if (!isset($_SESSION['usuario'])) {
             </div>
 
             <div class="navbar-title">
-                <h3>Historial de ocupaciones</h3>
+                <h3>Historial de reservas</h3>
             </div>
 
             <div class="navbar-right" style="margin-right: 18px;">
@@ -47,7 +48,7 @@ if (!isset($_SESSION['usuario'])) {
     <br>
 
     <div id="historial-container" class="container">
-        <h2 id="titulo-historial" class="text-white" style="background-color: none;">Historial de Ocupaciones</h2>
+        <h2 id="titulo-historial" class="text-white" style="background-color: none;">Historial de reservas</h2>
 
         <form method="GET" action="registro.php" class="mt-3">
             <div class="d-flex flex-wrap align-items-center">
@@ -215,9 +216,7 @@ if (!isset($_SESSION['usuario'])) {
             </table>
         </div>
     </div>
-
-    <script src="./js/sweetalert.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="./js/sweet_alerts.js"></script>
 </body>
 
 </html>

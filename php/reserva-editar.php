@@ -95,7 +95,7 @@ $id_usuario = $_SESSION['id_usuario'];
             ':id_reserva' => $id_reserva
         ]);
 
-        header("Location: ../gestionar_mesas.php?id_sala=" . urlencode($id_sala) . "&success=reserva_editada");
+        header("Location: ../gestionar_mesas.php?id_sala=" . urlencode($id_sala) . "&mensaje=reserva_editada");
     } catch (Exception $e) {
         echo "Error al procesar la reserva: " . htmlspecialchars($e->getMessage());
     }

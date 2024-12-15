@@ -66,8 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         if ($stmt->rowCount() > 0) {
-            header("Location: reservar.php?error=solapamiento");
-            exit();
+        header("Location: ../registro.php?mesa=" . urlencode($mesa_id) . "&error=solapamiento");            exit();
         }
 
         // Insertar la reserva en la tabla
@@ -83,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':id_turno' => $id_turno
         ]);
 
-        header("Location: ../registro.php");
+        header("Location: ../registro.php?mesa=" . urlencode($mesa_id) . "&mensaje=reserva");
     } catch (Exception $e) {
         echo "Error al procesar la reserva: " . htmlspecialchars($e->getMessage());
     }

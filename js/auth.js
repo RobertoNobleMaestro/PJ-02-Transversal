@@ -19,4 +19,21 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('contraError').textContent = 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial';
         }
     }
+    if (error) {
+        switch (error) {
+        case 'sesion_no_iniciada':
+            Swal.fire({
+                icon: 'error',
+                title: 'Sesión no iniciada',
+                text: 'Por favor, inicie sesión para continuar.'
+            });
+            break;
+            default:
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error inesperado',
+                    text: 'Ocurrió un error inesperado. Por favor, inténtelo nuevamente.'
+                });
+        }   
+   }
 });

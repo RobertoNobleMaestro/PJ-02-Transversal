@@ -72,15 +72,15 @@ ADD CONSTRAINT fk_reservas_turnos FOREIGN KEY (id_turno) REFERENCES tbl_turnos(i
 -- Insertar roles
 INSERT INTO tbl_rol (nombre_rol) VALUES
     ('Camarero'),
-    ('Administrador'),
+    ('Administrador');
 
 -- Insertar usuarios (camareros) adaptados (sin id_usuario porque es AUTO_INCREMENT)
 INSERT INTO tbl_usuarios (nombre_user, nombre_real, ape_usuario, contrasena, rol_user) VALUES
     ('Jorge', 'Jorge', 'López', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 2),
     ('Olga', 'Olga', 'Gómez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1),
     ('Miguel', 'Miguel', 'Pérez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1),
-    ('Ana', 'Ana', 'Martínez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 3),
-    ('Luis', 'Luis', 'Ramírez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 4);
+    ('Ana', 'Ana', 'Martínez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1),
+    ('Luis', 'Luis', 'Ramírez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1);
 
 -- Insertar salas
 -- Insertar salas con el stock máximo de sillas (60) por sala

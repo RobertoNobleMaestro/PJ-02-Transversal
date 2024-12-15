@@ -97,8 +97,6 @@ try {
                     <option value="todos" <?php echo ($rol_user == 'todos') ? 'selected' : ''; ?>>Todos</option>
                     <option value="1" <?php echo ($rol_user == '1') ? 'selected' : ''; ?>>Camarero</option>
                     <option value="2" <?php echo ($rol_user == '2') ? 'selected' : ''; ?>>Administrador</option>
-                    <option value="3" <?php echo ($rol_user == '3') ? 'selected' : ''; ?>>Gerente</option>
-                    <option value="4" <?php echo ($rol_user == '4') ? 'selected' : ''; ?>>Personal de Mantenimiento</option>
                 </select>
                 </div>
                 <div class="me-3 mb-3">
@@ -145,6 +143,6 @@ try {
             </tbody>
         </table>
     </div>
-    <script src="./js/sweat_alert_usuarios.js"></script>
+    <script src="./js/sweet_alerts.js"></script>
 </body>
 </html>

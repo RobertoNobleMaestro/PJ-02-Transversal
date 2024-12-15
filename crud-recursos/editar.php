@@ -39,21 +39,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Verificar que el nombre de la sala no exista ya en otra sala
+       // Verificar que el nombre de la sala no exista ya en otra sala
         $sql_check_sala = "
-            SELECT COUNT(*) 
-            FROM tbl_salas 
-            WHERE nombre_sala = :nombre_sala AND id_sala != :id_sala
+        SELECT COUNT(*) 
+        FROM tbl_salas 
+        WHERE nombre_sala = :nombre_sala AND id_sala != :id_sala
         ";
         $stmt_check_sala = $conexion->prepare($sql_check_sala);
         $stmt_check_sala->execute([
-            ':nombre_sala' => $nombre_sala,
-            ':id_sala' => $id_sala
+        ':nombre_sala' => $nombre_sala,
+        ':id_sala' => $id_sala
         ]);
         $sala_existente = $stmt_check_sala->fetchColumn();
 
         if ($sala_existente > 0) {
-            header('../menu-recursos.php?error=duplicado');
+        header("Location: ../menu-recursos.php?error=duplicado");  // Corregir la redirección
+        exit();
         }
+
 
         // Obtener los datos actuales de la sala
         $sql_check_imagen = "SELECT imagen_sala, nombre_sala FROM tbl_salas WHERE id_sala = :id_sala";

@@ -10,7 +10,7 @@ session_start();
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="./css/style.css">
     <title>Document</title>
 </head>
@@ -46,6 +46,7 @@ session_start();
         </div>
     </div>
     <script src="./js/auth.js"></script>
+    <script src="./js/sweet_alerts.js"></script>
     <style>
         .error-message {
             color: red;

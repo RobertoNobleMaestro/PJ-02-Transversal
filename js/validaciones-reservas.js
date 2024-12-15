@@ -24,8 +24,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Función para cargar horarios dinámicamente
     function loadTurnos(turnoValue) {
-        fechaInicio.innerHTML = "<option value='' disabled select>Selecciona una hora</option>";
-        const horas = turnoValue === '1' ? ['12:00', '13:00', '14:00', '15:00'] : ['19:00', '20:00', '21:00', '22:00'];
+        fechaInicio.innerHTML = "<option value='' disabled>Selecciona una hora</option>";
+        let horas = turnoValue === '1' ? ['12:00', '13:00', '14:00', '15:00'] : ['19:00', '20:00', '21:00', '22:00'];
+
+        // Verificar si la fecha seleccionada es hoy
+        const hoy = new Date();
+        const fechaSeleccionada = new Date(fechaReserva.value);
+        hoy.setHours(0, 0, 0, 0);
+        fechaSeleccionada.setHours(0, 0, 0, 0);
+
+        if (fechaSeleccionada.getTime() === hoy.getTime()) {
+            const horaActual = new Date().getHours();
+            horas = horas.filter(hora => parseInt(hora.split(':')[0]) > horaActual);
+        }
 
         horas.forEach(hora => {
             const option = document.createElement('option');
@@ -41,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const [hora] = fechaInicio.value.split(':');
             fechaFin.value = `${parseInt(hora) + 1}:00`;
         } else {
-            fechaFin.value = '';
+            fechaFin.value = ''; // Limpiar la hora de fin si no se seleccionó hora de inicio
         }
     }
 
@@ -78,6 +89,10 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             const hoy = new Date();
             const fechaSeleccionada = new Date(fechaReserva.value);
+
+            hoy.setHours(0, 0, 0, 0);
+            fechaSeleccionada.setHours(0, 0, 0, 0);
+
             if (fechaSeleccionada < hoy) {
                 fechaReservaError.textContent = "La fecha debe ser igual o posterior a hoy.";
                 fechaReserva.style.borderColor = "red";
@@ -91,12 +106,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Eventos
-    turno.onchange = updateForm;
+    turno.onchange = function () {
+        updateForm();
+        updateHoraFin();
+    };
+
     fechaInicio.onchange = function () {
         validateFechaInicio();
         updateHoraFin();
     };
-    fechaReserva.onblur = validateFechaReserva;
+
+    fechaReserva.onblur = function () {
+        if (validateFechaReserva()) {
+            loadTurnos(turno.value);
+        }
+    };
 
     formulario.onsubmit = function (event) {
         let isValid = true;
@@ -109,4 +133,14 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
         }
     };
+
+    // Si ya hay un turno seleccionado, cargar las horas al cargar la página
+    if (turno.value) {
+        loadTurnos(turno.value);
+    }
+
+    // Si ya hay una hora de inicio seleccionada, actualizar la hora de fin
+    if (fechaInicio.value) {
+        updateHoraFin();
+    }
 });
