@@ -47,6 +47,7 @@ try {
     <link rel="stylesheet" href="./css/menu.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
@@ -106,7 +107,7 @@ try {
                     foreach ($mesas as $mesa) {            
                         // Contar las reservas activas para cada mesa
                         $mesa_id = $mesa['id_mesa'];
-                        $query_reservas_count = "SELECT COUNT(*) FROM tbl_reservas WHERE id_mesa = :mesa_id AND fecha_fin IS NULL";
+                        $query_reservas_count = "SELECT COUNT(*) FROM tbl_reservas WHERE id_mesa = :mesa_id";
                         $stmt_reservas_count = $conexion->prepare($query_reservas_count);
                         $stmt_reservas_count->bindParam(':mesa_id', $mesa_id, PDO::PARAM_INT);
                         $stmt_reservas_count->execute();
@@ -129,6 +130,14 @@ try {
                                     <button type='submit' name='btn-reservar' class='btn-estado'>
                                         Reservar
                                     </button>
+                                <br>
+                                                                <br>
+                                </form>
+                                    <form method='POST' action='registro.php?mesa=" . htmlspecialchars($mesa['id_mesa']) . "'>
+                                    <input type='hidden' name='mesa_id' value='" . htmlspecialchars($mesa['id_mesa']) . "'>
+                                    <button type='submit' class='btn-estado' id='reservas'>
+                                        Ver reservas
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -146,9 +155,8 @@ try {
             }
             ?>
         </div>
-
-        <script src="./js/sweetalert.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        
+        <script src="./js/sweet_alerts.js"></script>
     </div>
 </body>
 

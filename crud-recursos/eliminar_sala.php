@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Si el usuario quiere eliminar solo la mesa
         if ($eliminar_sala == 'no') {
-            // Eliminar primero las ocupaciones asociadas a la mesa
+            // Eliminar primero las reservas asociadas a la mesa
             $sql_delete_ocupacion = "DELETE FROM tbl_reservas WHERE id_mesa = :id_mesa";
             $stmt_delete_ocupacion = $conexion->prepare($sql_delete_ocupacion);
             $stmt_delete_ocupacion->bindParam(':id_mesa', $id_mesa, PDO::PARAM_INT);
@@ -43,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             // Si el usuario quiere eliminar también la sala
 
-            // Eliminar primero las ocupaciones asociadas a todas las mesas de la sala
-            $sql_delete_ocupaciones = "DELETE FROM tbl_reservas WHERE id_mesa IN (SELECT id_mesa FROM tbl_mesas WHERE id_sala = :id_sala)";
-            $stmt_delete_ocupaciones = $conexion->prepare($sql_delete_ocupaciones);
-            $stmt_delete_ocupaciones->bindParam(':id_sala', $id_sala, PDO::PARAM_INT);
-            $stmt_delete_ocupaciones->execute();
+            // Eliminar primero las reservas asociadas a todas las mesas de la sala
+            $sql_delete_reservas = "DELETE FROM tbl_reservas WHERE id_mesa IN (SELECT id_mesa FROM tbl_mesas WHERE id_sala = :id_sala)";
+            $stmt_delete_reservas = $conexion->prepare($sql_delete_reservas);
+            $stmt_delete_reservas->bindParam(':id_sala', $id_sala, PDO::PARAM_INT);
+            $stmt_delete_reservas->execute();
 
             // Eliminar las reservas de recursos asociadas a todas las mesas de la sala
             $sql_delete_reservas = "DELETE FROM tbl_reservas WHERE id_mesa IN (SELECT id_mesa FROM tbl_mesas WHERE id_sala = :id_sala)";
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conexion->commit();
 
         // Redirigir al menú con mensaje de éxito
-        header("Location: ../menu-recursos.php?success=recurso_eliminado");
+        header("Location: ../menu-recursos.php?mensaje=recurso_eliminado");
         exit();
     } catch (Exception $e) {
         // Si ocurre un error, revertimos los cambios

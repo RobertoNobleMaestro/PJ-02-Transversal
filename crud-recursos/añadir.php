@@ -48,12 +48,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if (!empty($nombre_sala) && !empty($tipo_sala) && !empty($numero_mesas)) {
-                $sql_sala = "INSERT INTO tbl_salas (nombre_sala, tipo_sala, imagen_sala) VALUES (:nombre_sala, :tipo_sala, :imagen_sala)";
+                // Aquí se agrega el stock de sillas por defecto de 60
+                $stock_sillas = 60;
+
+                $sql_sala = "INSERT INTO tbl_salas (nombre_sala, tipo_sala, imagen_sala, stock_sillas) VALUES (:nombre_sala, :tipo_sala, :imagen_sala, :stock_sillas)";
                 $stmt_sala = $conexion->prepare($sql_sala);
                 $stmt_sala->execute([
                     ':nombre_sala' => $nombre_sala,
                     ':tipo_sala' => $tipo_sala,
-                    ':imagen_sala' => $nombre_imagen
+                    ':imagen_sala' => $nombre_imagen,
+                    ':stock_sillas' => $stock_sillas // Asignando el stock de sillas
                 ]);
 
                 $id_sala = $conexion->lastInsertId();
@@ -83,6 +87,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sillas_por_mesa = htmlspecialchars($_POST['numero_sillas'] ?? 4);
 
             if (!empty($id_sala) && !empty($numero_mesas)) {
+                // Obtener el total de sillas actuales en la sala
+                $sql_total_sillas = "SELECT SUM(numero_sillas) as total_sillas FROM tbl_mesas WHERE id_sala = :id_sala";
+                $stmt_total_sillas = $conexion->prepare($sql_total_sillas);
+                $stmt_total_sillas->execute([':id_sala' => $id_sala]);
+                $total_sillas_actuales = $stmt_total_sillas->fetch(PDO::FETCH_ASSOC)['total_sillas'] ?? 0;
+
+                // Verificar si añadir las nuevas sillas supera el stock
+                $total_sillas_nuevas = $total_sillas_actuales + ($numero_mesas * $sillas_por_mesa);
+                $stock_maximo = 60;
+
+                if ($total_sillas_nuevas > $stock_maximo) {
+                    header("Location: ../menu-recursos.php?error=supera_stock_sillas");
+                    exit();
+                }
+
                 $sql_max_mesa = "SELECT MAX(numero_mesa) as max_mesa FROM tbl_mesas WHERE id_sala = :id_sala";
                 $stmt_max_mesa = $conexion->prepare($sql_max_mesa);
                 $stmt_max_mesa->execute([':id_sala' => $id_sala]);
@@ -93,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 for ($i = 1; $i <= $numero_mesas; $i++) {
                     $numero_mesa = $max_mesa + $i;
-                    $stmt_mesa->execute([
+                    $stmt_mesa->execute([ 
                         ':numero_mesa' => $numero_mesa,
                         ':id_sala' => $id_sala,
                         ':numero_sillas' => $sillas_por_mesa

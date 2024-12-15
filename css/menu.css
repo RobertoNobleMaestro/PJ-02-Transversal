@@ -20,7 +20,9 @@ body {
 #historial-container {
     margin-top: -100px; 
 }
-
+#reservas{
+    background-color: #000000;
+}
 .navegacion {
     display: flex;
     justify-content: space-between;
@@ -191,7 +193,7 @@ section img:hover {
     width: 100%;
     padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 1em;
     color: #fff;
     background-color: #4CAF50;

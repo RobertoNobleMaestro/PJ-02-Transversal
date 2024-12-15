@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const usuario = document.body.getAttribute('data-usuario');
     const sweetalertMostrado = document.body.getAttribute('data-sweetalert') === 'true';
     const mesaSweetalertMostrado = document.body.getAttribute('data-mesa-sweetalert') === 'true';
-
     if (usuario && !sweetalertMostrado) {
         Swal.fire({
             title: '¡Bienvenido!',

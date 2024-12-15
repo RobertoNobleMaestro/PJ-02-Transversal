@@ -2,7 +2,7 @@
 
 $dbserver="localhost";
 $dbusername="root";
-$dbpassword="1234";
+$dbpassword="qazQAZ123";
 $dbbasedatos="bd_restaurante";
 
 try {

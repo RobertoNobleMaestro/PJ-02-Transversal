@@ -22,7 +22,8 @@ CREATE TABLE tbl_rol (
 CREATE TABLE tbl_salas (
     id_sala INT PRIMARY KEY AUTO_INCREMENT,
     nombre_sala VARCHAR(100),
-    tipo_sala VARCHAR(50),                    -- Tipo de sala (Terraza, Comedor, Sala Privada...)
+    tipo_sala VARCHAR(50),
+    stock_sillas INT, 
     imagen_sala VARCHAR(255) DEFAULT NULL     -- Imagen asociada a la sala
 );
 
@@ -71,29 +72,29 @@ ADD CONSTRAINT fk_reservas_turnos FOREIGN KEY (id_turno) REFERENCES tbl_turnos(i
 -- Insertar roles
 INSERT INTO tbl_rol (nombre_rol) VALUES
     ('Camarero'),
-    ('Administrador'),
-    ('Gerente'),
-    ('Personal de Mantenimiento');
+    ('Administrador');
 
 -- Insertar usuarios (camareros) adaptados (sin id_usuario porque es AUTO_INCREMENT)
 INSERT INTO tbl_usuarios (nombre_user, nombre_real, ape_usuario, contrasena, rol_user) VALUES
     ('Jorge', 'Jorge', 'López', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 2),
     ('Olga', 'Olga', 'Gómez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1),
     ('Miguel', 'Miguel', 'Pérez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1),
-    ('Ana', 'Ana', 'Martínez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 3),
-    ('Luis', 'Luis', 'Ramírez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 4);
+    ('Ana', 'Ana', 'Martínez','$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1),
+    ('Luis', 'Luis', 'Ramírez', '$2y$10$wORRwXyRsJRc9ua8okkNuO6m/GbqBuZouNb4LZbwFPDG6HwNUhOVa', 1);
 
 -- Insertar salas
-INSERT INTO tbl_salas (nombre_sala, tipo_sala, imagen_sala) VALUES
-    ('Terraza 1', 'Terraza', 'terraza 1.jpg'),
-    ('Terraza 2', 'Terraza', 'terraza 2.jpg'),
-    ('Terraza 3', 'Terraza', 'terraza 3.jpg'),
-    ('Comedor 1', 'Comedor', 'comedor 1.jpg'),
-    ('Comedor 2', 'Comedor', 'comedor 2.jpg'),
-    ('Sala Privada 1', 'Privada', 'sala privada 1.jpg'),
-    ('Sala Privada 2', 'Privada', 'sala privada 2.jpg'),
-    ('Sala Privada 3', 'Privada', 'sala privada 3.jpg'),
-    ('Sala Privada 4', 'Privada', 'sala privada 4.jpg');
+-- Insertar salas con el stock máximo de sillas (60) por sala
+INSERT INTO tbl_salas (nombre_sala, tipo_sala, imagen_sala, stock_sillas) VALUES
+    ('Terraza 1', 'Terraza', 'terraza 1.jpg', 60),
+    ('Terraza 2', 'Terraza', 'terraza 2.jpg', 60),
+    ('Terraza 3', 'Terraza', 'terraza 3.jpg', 60),
+    ('Comedor 1', 'Comedor', 'comedor 1.jpg', 60),
+    ('Comedor 2', 'Comedor', 'comedor 2.jpg', 60),
+    ('Sala Privada 1', 'Privada', 'sala privada 1.jpg', 60),
+    ('Sala Privada 2', 'Privada', 'sala privada 2.jpg', 60),
+    ('Sala Privada 3', 'Privada', 'sala privada 3.jpg', 60),
+    ('Sala Privada 4', 'Privada', 'sala privada 4.jpg', 60);
+
 
 -- Insertar mesas (relacionadas con salas existentes)
 INSERT INTO tbl_mesas (numero_mesa, id_sala, numero_sillas) VALUES

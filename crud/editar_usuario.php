@@ -18,6 +18,7 @@ try {
     // Consultar los datos del usuario
     $sql = "SELECT 
         u.id_usuario, 
+        u.contrasena, 
         u.nombre_user, 
         u.nombre_real, 
         u.ape_usuario, 
@@ -65,8 +66,8 @@ try {
         <!-- Campo oculto para ID del usuario -->
         <input type="hidden" name="id_usuario" value="<?php echo htmlspecialchars($usuario['id_usuario']); ?>">
     
-        <input type="password" id="contrasena" name="contrasena" class="form-label" hidden>
-            <span class="error" id="contrasenaError"></span>
+        <input type="password" id="contrasena" name="contrasena" class="form-label" value="<?php echo htmlspecialchars($usuario['contrasena']); ?>" hidden>
+            <span class="error" id="contrasenaError" style="display: none;"></span>
         <!-- Campo para Nombre de Usuario -->
         <label for="nombre_user">Nombre Usuario:</label>
         <input type="text" id="nombre_user" name="nombre_user" value="<?php echo htmlspecialchars($usuario['nombre_user']); ?>" class="form-label">

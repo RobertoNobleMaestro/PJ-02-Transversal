@@ -1,30 +1,19 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Referencias a elementos
     const turno = document.getElementById('turno');
-    const formReserva = document.getElementById('form_reserva');
     const fechaInicio = document.getElementById('fecha_inicio');
     const fechaFin = document.getElementById('fecha_fin');
     const fechaReserva = document.getElementById('fecha_reserva');
-    const formulario = document.getElementById('reservaForm');
+    const formulario = document.getElementById('editReservaForm');
 
     // Referencias a mensajes de error
     const turnoError = document.getElementById('turnoError');
     const fechaInicioError = document.getElementById('fechaInicioError');
     const fechaReservaError = document.getElementById('fechaReservaError');
 
-    // Función para actualizar dinámicamente el formulario
-    function updateForm() {
-        if (validateTurno()) {
-            formReserva.classList.remove('hidden');
-            loadTurnos(turno.value);
-        } else {
-            formReserva.classList.add('hidden');
-        }
-    }
-
     // Función para cargar horarios dinámicamente
     function loadTurnos(turnoValue) {
-        fechaInicio.innerHTML = "<option value='' disabled>Selecciona una hora</option>";
+        fechaInicio.innerHTML = "<option value='' selected disabled>Selecciona una hora</option>";
         let horas = turnoValue === '1' ? ['12:00', '13:00', '14:00', '15:00'] : ['19:00', '20:00', '21:00', '22:00'];
 
         // Verificar si la fecha seleccionada es hoy
@@ -44,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
             option.textContent = hora;
             fechaInicio.appendChild(option);
         });
+
+        validateForm();
     }
 
     // Función para actualizar la hora final
@@ -105,9 +96,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function validateForm() {
+        let isValid = true;
+        turnoError.textContent = '';
+        fechaInicioError.textContent = '';
+
+        if (!validateTurno()) isValid = false;
+        if (!validateFechaInicio()) isValid = false;
+        if (!validateFechaReserva()) isValid = false;
+
+        return isValid;
+    }
+
     // Eventos
     turno.onchange = function () {
-        updateForm();
+        loadTurnos(turno.value);
         updateHoraFin();
     };
 
@@ -123,13 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     formulario.onsubmit = function (event) {
-        let isValid = true;
-
-        if (!validateTurno()) isValid = false;
-        if (!validateFechaInicio()) isValid = false;
-        if (!validateFechaReserva()) isValid = false;
-
-        if (!isValid) {
+        if (!validateForm()) {
             event.preventDefault();
         }
     };

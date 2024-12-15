@@ -9,14 +9,14 @@ if (!isset($_SESSION['usuario']) || $_SESSION['rol_user'] != "1") {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Capturar datos del formulario con validaciones
-    $id_sala = isset($_POST['id_sala']) ? htmlspecialchars($_POST['id_sala']) : null;
-    $mesa_id = isset($_POST['mesa_id']) ? htmlspecialchars($_POST['mesa_id']) : null;
-    $fecha_reserva = isset($_POST['fecha_reserva']) ? htmlspecialchars($_POST['fecha_reserva']) : null;
-    $fecha_inicio = isset($_POST['fecha_inicio']) ? htmlspecialchars($_POST['fecha_inicio']) : null;
-    $fecha_fin = isset($_POST['fecha_fin']) ? htmlspecialchars($_POST['fecha_fin']) : null;
-    $id_turno = isset($_POST['id_turno']) ? htmlspecialchars($_POST['id_turno']) : null;
-    $id_usuario = $_SESSION['id_usuario']; // ID del usuario desde la sesión
-
+$id_reserva = htmlspecialchars($_POST['id_reserva']) ;
+$id_sala = htmlspecialchars($_POST['id_sala']) ;
+$id_mesa = htmlspecialchars($_POST['id_mesa']) ;
+$fecha_reserva = htmlspecialchars($_POST['fecha_reserva']) ;
+$fecha_inicio = htmlspecialchars($_POST['fecha_inicio']) ;
+$fecha_fin = htmlspecialchars($_POST['fecha_fin']) ;
+$id_turno = htmlspecialchars($_POST['id_turno']) ;
+$id_usuario = $_SESSION['id_usuario'];
     try {
         // Verificar que la fecha y hora no sean en el pasado
         $currentDateTime = new DateTime();
@@ -31,58 +31,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $horaFinTurno = $id_turno === "Mediodía" ? "16:00:00" : "23:59:59";
 
         if ($fecha_fin > $horaFinTurno) {
-            header("Location: reservar.php?error=hora_fuera_turno");
+            header("Location: reserva-editar.php?error=hora_fuera_turno");
             exit();
         }
 
         // Verificar que la mesa pertenece a la sala
-        $query = "SELECT * FROM tbl_mesas WHERE id_mesa = :mesa_id AND id_sala = :id_sala";
+        $query = "SELECT * FROM tbl_mesas WHERE id_mesa = :id_mesa AND id_sala = :id_sala";
         $stmt = $conexion->prepare($query);
-        $stmt->execute([
-            ':mesa_id' => $mesa_id,
+        $stmt->execute([ 
+            ':id_mesa' => $id_mesa,
             ':id_sala' => $id_sala
         ]);
-
-        if ($stmt->rowCount() === 0) {
-            header("Location: reservar.php?error=mesa_invalida");
-            exit();
-        }
+        
+        // // Comprobar si la mesa existe en la sala
+        // if ($stmt->rowCount() === 0) {
+        //     // Si no se encuentra, redirigir con el error
+        //     header("Location: reserva-editar.php?error=mesa_invalida");
+        //     exit();
+        // }
+        
 
         // Verificar solapamiento de horarios en la mesa
         $query = "SELECT * FROM tbl_reservas 
-                  WHERE id_mesa = :mesa_id 
+                  WHERE id_mesa = :id_mesa 
                   AND fecha_reserva = :fecha_reserva
+                  AND id_reserva != :id_reserva
                   AND (
                       (:fecha_inicio BETWEEN fecha_inicio AND fecha_fin)
                       OR (:fecha_fin BETWEEN fecha_inicio AND fecha_fin)
                       OR (fecha_inicio BETWEEN :fecha_inicio AND :fecha_fin)
                   )";
         $stmt = $conexion->prepare($query);
-        $stmt->execute([
-            ':mesa_id' => $mesa_id,
+        $stmt->execute([ 
+            ':id_mesa' => $id_mesa,
             ':fecha_reserva' => $fecha_reserva,
             ':fecha_inicio' => $fecha_inicio,
             ':fecha_fin' => $fecha_fin,
+            ':id_reserva' => $id_reserva
         ]);
 
         if ($stmt->rowCount() > 0) {
-        header("Location: ../registro.php?mesa=" . urlencode($mesa_id) . "&error=solapamiento");            exit();
+            header("Location: reserva-editar.php?error=solapamiento");
+            exit();
         }
 
-        // Insertar la reserva en la tabla
-        $insert = "INSERT INTO tbl_reservas (id_mesa, id_usuario, fecha_reserva, fecha_inicio, fecha_fin, id_turno)
-                   VALUES (:mesa_id, :id_usuario, :fecha_reserva, :fecha_inicio, :fecha_fin, :id_turno)";
-        $stmtInsert = $conexion->prepare($insert);
-        $stmtInsert->execute([
-            ':mesa_id' => $mesa_id,
+        // Actualizar la reserva en la base de datos
+        $update = "UPDATE tbl_reservas 
+                   SET id_mesa = :id_mesa, 
+                       id_usuario = :id_usuario, 
+                       fecha_reserva = :fecha_reserva, 
+                       fecha_inicio = :fecha_inicio, 
+                       fecha_fin = :fecha_fin, 
+                       id_turno = :id_turno
+                   WHERE id_reserva = :id_reserva";
+        $stmtUpdate = $conexion->prepare($update);
+        $stmtUpdate->execute([
+            ':id_mesa' => $id_mesa,
             ':id_usuario' => $id_usuario,
             ':fecha_reserva' => $fecha_reserva,
             ':fecha_inicio' => $fecha_inicio,
             ':fecha_fin' => $fecha_fin,
-            ':id_turno' => $id_turno
+            ':id_turno' => $id_turno,
+            ':id_reserva' => $id_reserva
         ]);
 
-        header("Location: ../registro.php?mesa=" . urlencode($mesa_id) . "&mensaje=reserva");
+        header("Location: ../gestionar_mesas.php?id_sala=" . urlencode($id_sala) . "&mensaje=reserva_editada");
     } catch (Exception $e) {
         echo "Error al procesar la reserva: " . htmlspecialchars($e->getMessage());
     }
